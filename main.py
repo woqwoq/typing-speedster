@@ -1,5 +1,7 @@
 from textual.app import App
-from textual.widgets import Button, Label, Footer, Input
+from textual.widgets import Button, Label, Footer, TextArea, Input
+from textual.suggester import SuggestFromList
+from PersistentPlaceholderInput import PersistentPlaceholderInput
 
 class MyApp(App):
     wordCount: int = 0
@@ -10,14 +12,19 @@ class MyApp(App):
     ]
     CSS_PATH = "styles.css"
 
-    welcomeLabel = Label(id='welcomeLabel', content="Vlad's Typing-Speedster")
-    keyboardInput = Input(id='keyboardInput', placeholder="tho this is not your name")
+    textToType="hello however nice is on party house college govern"
+
+    welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
+    keyboardInput = PersistentPlaceholderInput(id='keyboardInput', placeholder=textToType)
     restartButton = Button(id='restartButton', label="Restart")
+
+    attemptSidebar = Label(id='attemptSidebar', content="111WPM 20:35")
 
     def compose(self):
         yield self.welcomeLabel
         yield self.restartButton
         yield self.keyboardInput
+        yield self.attemptSidebar
         yield Footer()
 
     def on_mount(self):
