@@ -15,6 +15,8 @@ class PersistentPlaceholderInput(Input):
         max_content_width = self.scrollable_content_region.width
 
         value_text = self._value
+        text_length_before_ph = len(value_text)
+        logger = open('log.ini', 'w')
 
         placeholder = ""
         if self.placeholder:
@@ -29,6 +31,15 @@ class PersistentPlaceholderInput(Input):
                     end=""
                 )
                 value_text.append_text(ph_text)
+
+        for i in range(len(self.placeholder)):
+            logger.write(self.placeholder[i])
+        logger.write('\n')
+        for i in range(text_length_before_ph):
+            if(self.placeholder[i] != value_text[i].plain):
+                logger.write(f"Unmatch: {self.placeholder[i]} {value_text[i]} {i}\n")
+                value_text.stylize("bold magenta", i, i+1)
+
 
         if self.has_focus:
             if not self.selection.is_empty:
