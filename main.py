@@ -1,8 +1,8 @@
 from textual.app import App
 from textual.widgets import Button, Label, Footer, TextArea, Input
 from textual.suggester import SuggestFromList
-from PersistentPlaceholderInput import PersistentPlaceholderInput
-from PersistentPlaceholderTextArea import PersistentPlaceholderTextArea
+from widgets.PersistentPlaceholderInput import PersistentPlaceholderInput
+from widgets.PersistentPlaceholderTextArea import PersistentPlaceholderTextArea
 
 
 class MyApp(App):
@@ -12,7 +12,7 @@ class MyApp(App):
         ('ctrl+d', 'increase_words', 'Increase W CNT'),
         ('ctrl+a', 'decrease_words', 'Decrease W CNT')
     ]
-    CSS_PATH = "styles.css"
+    CSS_PATH = "styles/styles.css"
 
     textToType="hello however nice is on party house college govern hello "
 

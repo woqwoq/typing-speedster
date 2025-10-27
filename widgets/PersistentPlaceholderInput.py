@@ -8,6 +8,7 @@ class PersistentPlaceholderInput(Input):
     """An Input that keeps showing its placeholder while typing."""
 
     def render_line(self, y: int) -> Strip:
+        logger = open('logs/PersistentPlaceholderTextArea_LOG.ini', 'w')
         if y != 0:
             return Strip.blank(self.size.width, self.rich_style)
 
@@ -17,7 +18,6 @@ class PersistentPlaceholderInput(Input):
 
         value_text = self._value
         text_length_before_ph = len(value_text)
-        logger = open('log.ini', 'w')
 
         placeholder = ""
         if self.placeholder:

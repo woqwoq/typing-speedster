@@ -7,7 +7,7 @@ from rich.text import Text
 
 class PersistentPlaceholderTextArea(TextArea):
     def _render_line(self, y: int) -> Strip:
-        logger = open('render_line_log.ini', 'w')
+        logger = open('logs/PersistentPlaceholderTextArea_LOG.ini', 'w')
         """Render a single line of the PersistentPlaceholderTextArea. Called by Textual.
 
         Args:
