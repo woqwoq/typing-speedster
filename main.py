@@ -14,7 +14,7 @@ class MyApp(App):
     ]
     CSS_PATH = "styles/styles.css"
 
-    textToType="hello however nice is on party house college govern hello "
+    textToType="if not self.text and self.placeholder:placeholder_lines = Content.from_text(self.placeholder).wrap(self.content_size.width)if y < len(placeholder_lines):"
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
     keyboardInput = PersistentPlaceholderTextArea(id='keyboardInput', placeholder=textToType)

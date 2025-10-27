@@ -10,9 +10,10 @@ from rich.text import Text
 from textual.expand_tabs import expand_tabs_inline, expand_text_tabs_from_widths
 
 class PersistentPlaceholderTextArea(TextArea):
+    def get_placeholder_lines(self):
+        return Content.from_text(self.placeholder).wrap(self.content_size.width)
 
     def render_line(self, y: int) -> Strip:
-        logger = open('logs/PersistentPlaceholderTextArea_LOG.ini', 'w')
         """Render a single line of the TextArea. Called by Textual.
 
         Args:
@@ -21,13 +22,9 @@ class PersistentPlaceholderTextArea(TextArea):
         Returns:
             A rendered line.
         """
-
         if self.placeholder:
             #Important
-            placeholder_lines = Content.from_text(self.placeholder).wrap(
-                self.content_size.width
-            )
-            logger.write("\nPlaceholder Lines" + str(placeholder_lines))
+            placeholder_lines = self.get_placeholder_lines()
             if y < len(placeholder_lines):
                 style = self.get_visual_style("text-area--placeholder")
                 content = placeholder_lines[y].stylize(style)
@@ -38,11 +35,6 @@ class PersistentPlaceholderTextArea(TextArea):
                         content = content.stylize(
                             ContentStyle.from_rich_style(cursor_style), 0, 1
                         )
-                final = Strip(
-                    content.render_segments(self.visual_style), content.cell_length
-                )
-                logger.write("\nPlaceholder Strip" + str(final))
-                return final
 
         scroll_x, scroll_y = self.scroll_offset
         absolute_y = scroll_y + y
@@ -81,7 +73,6 @@ class PersistentPlaceholderTextArea(TextArea):
         return line
 
     def _render_line(self, y: int) -> Strip:
-        logger = open('logs/PersistentPlaceholderTextArea_LOG.ini', 'w')
         """Render a single line of the PersistentPlaceholderTextArea. Called by Textual.
 
         Args:
@@ -107,6 +98,15 @@ class PersistentPlaceholderTextArea(TextArea):
         out_of_bounds = y_offset >= wrapped_document.height
 
         if out_of_bounds:
+            #Handling placeholders outside of typed range
+            ph_lines = self.get_placeholder_lines()
+            if(y >= len(ph_lines)):
+                return Strip.blank(self.size.width, base_style)
+            if(y != 0):
+                curr_ph = self.get_placeholder_lines()[y]
+                if(curr_ph):
+                    return Strip([Segment(curr_ph, Style(dim=True))])
+                
             return Strip.blank(self.size.width, base_style)
 
         # Get the line corresponding to this offset
@@ -191,7 +191,7 @@ class PersistentPlaceholderTextArea(TextArea):
 
         HIGHLIGHT_STYLE = Style(bgcolor='red')
             
-        #important
+        #Handling placeholder on a current line
         line_len = len(line)
         ph_line = Text(self.placeholder[line_len:], Style(dim=True))
         line += ph_line
@@ -301,9 +301,6 @@ class PersistentPlaceholderTextArea(TextArea):
             else max(virtual_width, self.region.size.width)
         )
         target_width = base_width - self.gutter_width
-
-
-        #START
         
 
         # Crop the line to show only the visible part (some may be scrolled out of view)
@@ -324,7 +321,5 @@ class PersistentPlaceholderTextArea(TextArea):
             strip = Strip.join([Strip(gutter, cell_length=gutter_width), text_strip])
         else:
             strip = text_strip
-
-        logger.write("\nFinal Strip: " + str(strip))
 
         return strip.apply_style(base_style)
