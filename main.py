@@ -14,7 +14,7 @@ class MyApp(App):
     ]
     CSS_PATH = "styles.css"
 
-    textToType="hello however nice is on party house college govern"
+    textToType="hello however nice is on party house college govern hello "
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
     keyboardInput = PersistentPlaceholderTextArea(id='keyboardInput', placeholder=textToType)

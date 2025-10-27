@@ -13,5 +13,6 @@ strip2 = Strip(segments2)
 
 # Combine by concatenating their segments
 combined = Strip(list(strip1) + list(strip2))
-
-console.print(combined)
+newElement = combined[4].apply_style(Style(bgcolor='white'))
+print(combined[:4])
+# combined = combined[:4] + newElement + combined[5:]
