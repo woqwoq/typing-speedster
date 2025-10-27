@@ -1,11 +1,85 @@
 from textual.strip import Strip
 from textual.widgets import TextArea
+from textual.content import Content
+from textual.style import Style as ContentStyle
 
 from rich.style import Style
 from rich.segment import Segment
 from rich.text import Text
 
+from textual.expand_tabs import expand_tabs_inline, expand_text_tabs_from_widths
+
 class PersistentPlaceholderTextArea(TextArea):
+
+    def render_line(self, y: int) -> Strip:
+        logger = open('logs/PersistentPlaceholderTextArea_LOG.ini', 'w')
+        """Render a single line of the TextArea. Called by Textual.
+
+        Args:
+            y: Y Coordinate of line relative to the widget region.
+
+        Returns:
+            A rendered line.
+        """
+
+        if self.placeholder:
+            #Important
+            placeholder_lines = Content.from_text(self.placeholder).wrap(
+                self.content_size.width
+            )
+            logger.write("\nPlaceholder Lines" + str(placeholder_lines))
+            if y < len(placeholder_lines):
+                style = self.get_visual_style("text-area--placeholder")
+                content = placeholder_lines[y].stylize(style)
+                if self._draw_cursor and y == 0:
+                    theme = self._theme
+                    cursor_style = theme.cursor_style if theme else None
+                    if cursor_style:
+                        content = content.stylize(
+                            ContentStyle.from_rich_style(cursor_style), 0, 1
+                        )
+                final = Strip(
+                    content.render_segments(self.visual_style), content.cell_length
+                )
+                logger.write("\nPlaceholder Strip" + str(final))
+                return final
+
+        scroll_x, scroll_y = self.scroll_offset
+        absolute_y = scroll_y + y
+        selection = self.selection
+        cache_key = (
+            self.size,
+            scroll_x,
+            absolute_y,
+            (
+                selection
+                if selection.contains_line(absolute_y) or self.soft_wrap
+                else selection.end[0] == absolute_y
+            ),
+            (
+                selection.end
+                if (
+                    self._cursor_visible
+                    and self.cursor_blink
+                    and absolute_y == selection.end[0]
+                )
+                else None
+            ),
+            self.theme,
+            self._matching_bracket_location,
+            self.match_cursor_bracket,
+            self.soft_wrap,
+            self.show_line_numbers,
+            self.read_only,
+            self.show_cursor,
+            self.suggestion,
+        )
+        if (cached_line := self._line_cache.get(cache_key)) is not None:
+            return cached_line
+        line = self._render_line(y)
+        self._line_cache[cache_key] = line
+        return line
+
     def _render_line(self, y: int) -> Strip:
         logger = open('logs/PersistentPlaceholderTextArea_LOG.ini', 'w')
         """Render a single line of the PersistentPlaceholderTextArea. Called by Textual.
@@ -117,6 +191,7 @@ class PersistentPlaceholderTextArea(TextArea):
 
         HIGHLIGHT_STYLE = Style(bgcolor='red')
             
+        #important
         line_len = len(line)
         ph_line = Text(self.placeholder[line_len:], Style(dim=True))
         line += ph_line
