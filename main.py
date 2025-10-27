@@ -1,23 +1,31 @@
 from textual.app import App
-from textual.widgets import Button, Label, Footer, TextArea, Input
-from textual.suggester import SuggestFromList
+from textual.widgets import Button, Label, Footer, TextArea, Static
+
 from widgets.PersistentPlaceholderInput import PersistentPlaceholderInput
 from widgets.PersistentPlaceholderTextArea import PersistentPlaceholderTextArea
+from widgets.StaticKeyboardInput import StaticKeyboardInput
+
+from TextGenerator import TextGenerator
 
 
 class MyApp(App):
-    wordCount: int = 0
-
+    
     BINDINGS =[
         ('ctrl+d', 'increase_words', 'Increase W CNT'),
-        ('ctrl+a', 'decrease_words', 'Decrease W CNT')
+        ('ctrl+a', 'decrease_words', 'Decrease W CNT'),
+        ('ctrl+s', 'restart', 'Restart')
     ]
+
     CSS_PATH = "styles/styles.css"
 
-    textToType="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+    textGenerator = TextGenerator(123, "words.txt")
+
+    wordCount: int = 5
+
+    textToType = textGenerator.get_text(wordCount)
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
-    keyboardInput = PersistentPlaceholderTextArea(id='keyboardInput', placeholder=textToType)
+    keyboardInput = StaticKeyboardInput(id='labelInput', placeholder=textToType)
     restartButton = Button(id='restartButton', label="Restart")
 
     attemptSidebar = Label(id='attemptSidebar', content="111WPM 20:35")
@@ -30,17 +38,29 @@ class MyApp(App):
         yield Footer()
 
     def on_mount(self):
-        self.keyboardInput.border_title = "10 Word Test"
+        self.keyboardInput.border_title = f"{self.wordCount} Word Test"
         self.keyboardInput.border_subtitle = "Easy Difficulty"
         self.keyboardInput.styles.border_title_align = "center"
+        self.keyboardInput.styles.border = ("heavy", "blue")
+
+    def generate_new_text(self, amount: int):
+        self.textToType = self.textGenerator.get_text(self.wordCount)
 
     def action_increase_words(self):
         self.wordCount+=1
-        self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
+        self.query_one('#labelInput').border_title = f"{self.wordCount} Word Test"
+        self.generate_new_text(self.wordCount)
+        self.keyboardInput.update_text(self.textToType)
 
     def action_decrease_words(self):
         self.wordCount-=1
-        self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
+        self.query_one('#labelInput').border_title = f"{self.wordCount} Word Test"
+        self.generate_new_text(self.wordCount)
+        self.keyboardInput.update_text(self.textToType)
+
+    def action_restart(self):
+        self.generate_new_text(self.wordCount)
+        self.keyboardInput.update_text(self.textToType)
 
 
 

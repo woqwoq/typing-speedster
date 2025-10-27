@@ -58,3 +58,10 @@ class StaticKeyboardInput(Static):
             self.cursor_pos -= 1
 
         self.render_text()
+
+
+    def update_text(self, text: str):
+        self.cursor_pos = 0
+        self.text = ""
+        self.placeholder = text
+        self.render_text()
