@@ -2,6 +2,7 @@ from textual.widgets import Static
 from textual.events import Key
 from rich.text import Text
 from rich.style import Style
+from time import time
 
 TEXT_STYLE = Style(color="white")
 CURSOR_STYLE = Style(color="black", bgcolor="white")
@@ -18,9 +19,13 @@ class StaticKeyboardInput(Static):
         self.placeholder = placeholder
         self.text = ""
         self.cursor_pos = 0
+        self.time_start = None
+        self.time_end = None
+        self.time_recent = None
         
     def on_mount(self):
         self.render_text()
+        self.focus()
 
 
     #TODO: Make it more efficient using sets
@@ -43,6 +48,8 @@ class StaticKeyboardInput(Static):
 
         self.update(t)
 
+        self.check_start_stop()
+
 
     def on_key(self, event: Key):
         key = event.key
@@ -64,4 +71,20 @@ class StaticKeyboardInput(Static):
         self.cursor_pos = 0
         self.text = ""
         self.placeholder = text
+        self.time_start = None
+        self.time_end = None
         self.render_text()
+
+    def reset_text(self):
+        self.update_text(self.text)
+
+    def check_start_stop(self):
+        logger = open('logs/Timer_LOG.ini', 'a+')
+        if(self.cursor_pos == 1):
+            self.time_start = time()
+
+        if(self.cursor_pos-1 == len(self.placeholder)-1):
+            self.time_end = time()
+            
+            self.time_recent = self.time_end - self.time_start
+            logger.write(f"\n{self.text} - {self.time_recent} - { (len(self.text.split())/self.time_recent)*60 } WPM - { ((len(self.text)/4.7)/self.time_recent)*60 } WPM")
