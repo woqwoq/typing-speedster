@@ -7,6 +7,7 @@ from rich.text import Text
 
 class PersistentPlaceholderTextArea(TextArea):
     def _render_line(self, y: int) -> Strip:
+        logger = open('render_line_log.ini', 'w')
         """Render a single line of the PersistentPlaceholderTextArea. Called by Textual.
 
         Args:
@@ -48,7 +49,7 @@ class PersistentPlaceholderTextArea(TextArea):
         line = self.get_line(line_index)
         line_character_count = len(line)
         line.tab_size = self.indent_width
-        line.set_length(line_character_count+1)  # space at end for cursor
+        line.set_length(line_character_count)  # space at end for cursor
         virtual_width, _virtual_height = self.virtual_size
 
         selection = self.selection
@@ -113,6 +114,10 @@ class PersistentPlaceholderTextArea(TextArea):
                         byte_to_codepoint.get(highlight_start, 0),
                         byte_to_codepoint.get(highlight_end) if highlight_end else None,
                     )
+            
+        line_len = len(line)
+        ph_line = Text(self.placeholder[line_len:], Style(dim=True))
+        line += ph_line
 
         # Highlight the cursor
         matching_bracket = self._matching_bracket_location
@@ -218,29 +223,11 @@ class PersistentPlaceholderTextArea(TextArea):
 
 
         #START
-        logger = open('render_line_log.ini', 'w')
+        
 
         # Crop the line to show only the visible part (some may be scrolled out of view)
-        logger.write("\nPlaceholder: " + str(self.placeholder))
-        line_len = len(line)
-
-        ph_line = self.placeholder[line_len-1:]
-        logger.write("\nph_line:" + str(ph_line))
-
         console = self.app.console
         text_strip = Strip(line.render(console), cell_length=line.cell_len)
-
-        # cursor_strip = [Segment(str(self.placeholder[line_len]), Style(bgcolor='white', color='black'))]
-        # cursor_strip = Strip(cursor_strip)
-
-        ph_strip = [Segment(str(ph_line), Style(color='red'))]
-        ph_strip = Strip(ph_strip)
-        logger.write("\nph_strip: " + str(ph_strip))
-        text_strip = text_strip + ph_strip
-        logger.write("\ntext_strip: " + str(Strip(text_strip)))
-
-        logger.write("\nEntered:" + str(line))
-        logger.write("\nStrip: " + str(text_strip))
 
         if not self.soft_wrap:
             text_strip = text_strip.crop(scroll_x, scroll_x + virtual_width)
