@@ -114,10 +114,16 @@ class PersistentPlaceholderTextArea(TextArea):
                         byte_to_codepoint.get(highlight_start, 0),
                         byte_to_codepoint.get(highlight_end) if highlight_end else None,
                     )
+
+        HIGHLIGHT_STYLE = Style(bgcolor='red')
             
         line_len = len(line)
         ph_line = Text(self.placeholder[line_len:], Style(dim=True))
         line += ph_line
+
+        for i in range(line_len):
+            if line[i].plain != self.placeholder[i]:
+                line.stylize(HIGHLIGHT_STYLE, i, i+1)
 
         # Highlight the cursor
         matching_bracket = self._matching_bracket_location
