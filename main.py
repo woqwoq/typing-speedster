@@ -2,6 +2,8 @@ from textual.app import App
 from textual.widgets import Button, Label, Footer, TextArea, Input
 from textual.suggester import SuggestFromList
 from PersistentPlaceholderInput import PersistentPlaceholderInput
+from PersistentPlaceholderTextArea import PersistentPlaceholderTextArea
+
 
 class MyApp(App):
     wordCount: int = 0
@@ -15,7 +17,7 @@ class MyApp(App):
     textToType="hello however nice is on party house college govern"
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
-    keyboardInput = PersistentPlaceholderInput(id='keyboardInput', placeholder=textToType)
+    keyboardInput = PersistentPlaceholderTextArea(id='keyboardInput', placeholder=textToType)
     restartButton = Button(id='restartButton', label="Restart")
 
     attemptSidebar = Label(id='attemptSidebar', content="111WPM 20:35")

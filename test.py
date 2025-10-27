@@ -1,8 +1,17 @@
-from rich import text
+from rich.segment import Segment
+from rich.style import Style
+from rich.console import Console
+from textual.strip import Strip
 
-asd = text.Text("asd")
-print(len(asd))
-print(type(asd))
-print(type(asd[0].plain))
-print(type('a'))
-print(asd[0] == 'a')
+console = Console()
+
+segments = [Segment('asd', Style(bold=True)), Segment('red', Style(color='red'))]
+segments2 = [Segment('blue', Style(color='blue')), Segment('purp', Style(color='purple'))]
+
+strip1 = Strip(segments)
+strip2 = Strip(segments2)
+
+# Combine by concatenating their segments
+combined = Strip(list(strip1) + list(strip2))
+
+console.print(combined)

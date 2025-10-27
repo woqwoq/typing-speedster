@@ -1,5 +1,6 @@
 from textual.widgets import Input
 from rich.text import Text
+from rich.style import Style
 from textual.strip import Strip
 
 
@@ -35,10 +36,16 @@ class PersistentPlaceholderInput(Input):
         for i in range(len(self.placeholder)):
             logger.write(self.placeholder[i])
         logger.write('\n')
+        
+        HIGHLIGHT_STYLE = Style(bgcolor='red')
+
         for i in range(text_length_before_ph):
             if(self.placeholder[i] != value_text[i].plain):
+                # if(value_text[i].plain == ' '):
+                #     value_text = value_text[:i].append_text(Text('#')).append_text(value_text[i+1:])
+                #     logger.write(f"After replacing: {value_text}")
                 logger.write(f"Unmatch: {self.placeholder[i]} {value_text[i]} {i}\n")
-                value_text.stylize("bold magenta", i, i+1)
+                value_text.stylize(HIGHLIGHT_STYLE, i, i+1)
 
 
         if self.has_focus:
