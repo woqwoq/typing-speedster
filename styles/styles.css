@@ -3,6 +3,12 @@
     background: red;
 }
 
+#labelInput{
+    text-wrap: wrap;
+    margin: 1 3;
+    height: 6;
+}
+
 #attemptSidebar{
     dock: left;
     height: 100%;
