@@ -89,5 +89,6 @@ class StaticKeyboardInput(Static):
             
             #TODO: Add hit-ratio influence for the formulas
             self.time_recent = self.time_end - self.time_start
-            logger.write(f"\n{self.text} - {self.time_recent} - { (len(self.text.split())/self.time_recent)*60 } WPM - { ((len(self.text)/4.7)/self.time_recent)*60 } WPM")
+            wpm = max((len(self.text.split())/self.time_recent)*60, ((len(self.text)/4.7)/self.time_recent)*60)
+            self.app.query_one("#wpmLabel").update(f"{wpm:.0f} WPM")
             self.reset_text()

@@ -1,5 +1,6 @@
 from textual.app import App
-from textual.widgets import Button, Label, Footer, TextArea, Static
+from textual.widgets import Button, Label, Footer, Static
+from textual.containers import Container
 
 from widgets.PersistentPlaceholderInput import PersistentPlaceholderInput
 from widgets.PersistentPlaceholderTextArea import PersistentPlaceholderTextArea
@@ -26,14 +27,15 @@ class MyApp(App):
     textToType = textGenerator.get_text(wordCount)
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
-    keyboardInput = StaticKeyboardInput(id='labelInput', placeholder=textToType)
-    restartButton = Button(id='restartButton', label="Restart")
+
+    keyboardInput = StaticKeyboardInput(id='keyboardInput', placeholder=textToType)
+    labels = Container( Label("15", id="timerLabel"), Label("144 WPM", id="wpmLabel"), id="labelContainer")
 
     attemptSidebar = Label(id='attemptSidebar', content="111WPM 20:35")
 
     def compose(self):
         yield self.welcomeLabel
-        yield self.restartButton
+        yield self.labels
         yield self.keyboardInput
         yield self.attemptSidebar
         yield Footer()
@@ -49,13 +51,13 @@ class MyApp(App):
 
     def action_increase_words(self):
         self.wordCount+=1
-        self.query_one('#labelInput').border_title = f"{self.wordCount} Word Test"
+        self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
         self.generate_new_text(self.wordCount)
         self.keyboardInput.update_text(self.textToType)
 
     def action_decrease_words(self):
         self.wordCount-=1
-        self.query_one('#labelInput').border_title = f"{self.wordCount} Word Test"
+        self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
         self.generate_new_text(self.wordCount)
         self.keyboardInput.update_text(self.textToType)
 
