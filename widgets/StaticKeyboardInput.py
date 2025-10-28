@@ -29,6 +29,7 @@ class StaticKeyboardInput(Static):
 
 
     #TODO: Make it more efficient using sets
+    #TODO: Replace unmatched car to what it should be
     def highlight_mismatches(self, t: Text)->Text:
         for i in range(len(t)):
             if(t[i].plain != self.placeholder[i]):
@@ -76,7 +77,7 @@ class StaticKeyboardInput(Static):
         self.render_text()
 
     def reset_text(self):
-        self.update_text(self.text)
+        self.update_text(self.placeholder)
 
     def check_start_stop(self):
         logger = open('logs/Timer_LOG.ini', 'a+')
@@ -86,6 +87,7 @@ class StaticKeyboardInput(Static):
         if(self.cursor_pos-1 == len(self.placeholder)-1):
             self.time_end = time()
             
+            #TODO: Add hit-ratio influence for the formulas
             self.time_recent = self.time_end - self.time_start
             logger.write(f"\n{self.text} - {self.time_recent} - { (len(self.text.split())/self.time_recent)*60 } WPM - { ((len(self.text)/4.7)/self.time_recent)*60 } WPM")
             self.reset_text()

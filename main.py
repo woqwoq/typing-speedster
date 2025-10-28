@@ -7,6 +7,7 @@ from widgets.StaticKeyboardInput import StaticKeyboardInput
 
 from TextGenerator import TextGenerator
 
+UNALLOWED_CHARS = {',', '.', "'", "-"}
 
 class MyApp(App):
     
@@ -18,7 +19,7 @@ class MyApp(App):
 
     CSS_PATH = "styles/styles.css"
 
-    textGenerator = TextGenerator(123, "words.txt")
+    textGenerator = TextGenerator(123, "words.txt", UNALLOWED_CHARS)
 
     wordCount: int = 5
 
