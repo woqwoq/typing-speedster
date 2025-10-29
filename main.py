@@ -1,10 +1,11 @@
 from textual.app import App
-from textual.widgets import Button, Label, Footer, Static
+from textual.widgets import Button, Label, Footer, Static, Collapsible, DataTable
 from textual.containers import Container
 
 from widgets.PersistentPlaceholderInput import PersistentPlaceholderInput
 from widgets.PersistentPlaceholderTextArea import PersistentPlaceholderTextArea
 from widgets.StaticKeyboardInput import StaticKeyboardInput, TypingCompleted
+from widgets.AttemptSidebar import AttemptSidebar
 
 from TextGenerator import TextGenerator
 
@@ -31,7 +32,7 @@ class MyApp(App):
     keyboardInput = StaticKeyboardInput(id='keyboardInput', placeholder=textToType)
     labels = Container( Label("15", id="timerLabel"), Label("", id="wpmLabel"), id="labelContainer")
 
-    attemptSidebar = Label(id='attemptSidebar', content="111WPM 20:35")
+    attemptSidebar = AttemptSidebar(id='attemptSidebarCollapsible', title='Previous Attempts')
 
     def compose(self):
         yield self.welcomeLabel
