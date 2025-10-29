@@ -1,13 +1,23 @@
+from textual.message import Message
 from textual.widgets import Static
 from textual.events import Key
 from rich.text import Text
 from rich.style import Style
 from time import time
 
+
 TEXT_STYLE = Style(color="white")
 CURSOR_STYLE = Style(color="black", bgcolor="white")
 DIM_TEXT_STYLE = Style(color="white", dim=True)
 UNMATCH_TEXT_STYLE = Style(color="white", bgcolor="red")
+
+
+class TypingCompleted(Message):
+    def __init__(self, wpm: float, cpm: float, text: str):
+        super().__init__()
+        self.wpm = wpm
+        self.cpm = cpm
+        self.text = text
 
 
 class StaticKeyboardInput(Static):
@@ -90,5 +100,7 @@ class StaticKeyboardInput(Static):
             #TODO: Add hit-ratio influence for the formulas
             self.time_recent = self.time_end - self.time_start
             wpm = max((len(self.text.split())/self.time_recent)*60, ((len(self.text)/4.7)/self.time_recent)*60)
-            self.app.query_one("#wpmLabel").update(f"{wpm:.0f} WPM")
+            cpm = (len( list(self.text) )/self.time_recent)*60 
+
+            self.post_message(TypingCompleted(wpm, cpm, self.text))
             self.reset_text()

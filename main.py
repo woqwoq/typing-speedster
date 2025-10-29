@@ -4,7 +4,7 @@ from textual.containers import Container
 
 from widgets.PersistentPlaceholderInput import PersistentPlaceholderInput
 from widgets.PersistentPlaceholderTextArea import PersistentPlaceholderTextArea
-from widgets.StaticKeyboardInput import StaticKeyboardInput
+from widgets.StaticKeyboardInput import StaticKeyboardInput, TypingCompleted
 
 from TextGenerator import TextGenerator
 
@@ -29,7 +29,7 @@ class MyApp(App):
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
 
     keyboardInput = StaticKeyboardInput(id='keyboardInput', placeholder=textToType)
-    labels = Container( Label("15", id="timerLabel"), Label("144 WPM", id="wpmLabel"), id="labelContainer")
+    labels = Container( Label("15", id="timerLabel"), Label("", id="wpmLabel"), id="labelContainer")
 
     attemptSidebar = Label(id='attemptSidebar', content="111WPM 20:35")
 
@@ -64,6 +64,10 @@ class MyApp(App):
     def action_restart(self):
         self.generate_new_text(self.wordCount)
         self.keyboardInput.update_text(self.textToType)
+
+    async def on_typing_completed(self, message: TypingCompleted):
+        self.query_one('#wpmLabel').update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
+        # self.query_one('#timerLabel').update(f"{message.cpm:.0f} CPM")
 
 
 
