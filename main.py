@@ -68,6 +68,7 @@ class MyApp(App):
 
     async def on_typing_completed(self, message: TypingCompleted):
         self.query_one('#wpmLabel').update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
+        self.attemptSidebar.add_entry(f"{message.wpm:.0f} WPM")
         # self.query_one('#timerLabel').update(f"{message.cpm:.0f} CPM")
 
 
