@@ -1,5 +1,5 @@
 from textual.app import App
-from textual.widgets import Button, Label, Footer, Static, Collapsible, DataTable
+from textual.widgets import Label, Footer
 from textual.containers import Container
 
 from widgets.PersistentPlaceholderInput import PersistentPlaceholderInput
@@ -21,11 +21,12 @@ class MyApp(App):
 
     CSS_PATH = "styles/styles.css"
 
-    textGenerator = TextGenerator(123, "words.txt", UNALLOWED_CHARS)
+    textGenerator = TextGenerator(123, "The_Oxford_3000.txt", UNALLOWED_CHARS)
 
     wordCount: int = 5
+    maxWordLen: int = 4
 
-    textToType = textGenerator.get_text(wordCount)
+    textToType = textGenerator.get_text(wordCount, maxWordLen)
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
 
@@ -47,23 +48,23 @@ class MyApp(App):
         self.keyboardInput.styles.border_title_align = "center"
         self.keyboardInput.styles.border = ("heavy", "blue")
 
-    def generate_new_text(self, amount: int):
-        self.textToType = self.textGenerator.get_text(self.wordCount)
+    def generate_new_text(self):
+        self.textToType = self.textGenerator.get_text(self.wordCount, self.maxWordLen)
 
     def action_increase_words(self):
         self.wordCount+=1
         self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
-        self.generate_new_text(self.wordCount)
+        self.generate_new_text()
         self.keyboardInput.update_text(self.textToType)
 
     def action_decrease_words(self):
         self.wordCount-=1
         self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
-        self.generate_new_text(self.wordCount)
+        self.generate_new_text()
         self.keyboardInput.update_text(self.textToType)
 
     def action_restart(self):
-        self.generate_new_text(self.wordCount)
+        self.generate_new_text()
         self.keyboardInput.update_text(self.textToType)
 
     async def on_typing_completed(self, message: TypingCompleted):

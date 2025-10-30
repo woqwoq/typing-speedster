@@ -28,10 +28,14 @@ class TextGenerator():
         
         return text
     
-    def get_text(self, amount: int):
+    def get_text(self, amount: int, allowedLen: int):
         text = []
         for i in range(amount):
             current_index = random.randint(0, self.word_count-1)
+            while(len(self.words[current_index]) > allowedLen):
+                current_index = random.randint(0, self.word_count-1)
+
             text.append(self.words[current_index])
+
         text = self._remove_unallowed_chars(' '.join(text))
         return text

@@ -4,11 +4,12 @@ from rich.console import Console
 from textual.strip import Strip
 from rich.text import Text
 
+from TextGenerator import TextGenerator
+
 console = Console()
 
-t1 = Text("asd")
-t2 = Text("fas")
+asd = TextGenerator(123, "The_Oxford_3000.txt", {})
+
+t1 = Text(asd.get_text(5, 3))
 
 console.print(t1)
-console.print(t2)
-console.print(t1+t2)
