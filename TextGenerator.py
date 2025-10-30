@@ -1,4 +1,5 @@
 import random
+from textual import log
 
 class TextGenerator():
     
@@ -28,11 +29,11 @@ class TextGenerator():
         
         return text
     
-    def get_text(self, amount: int, allowedLen: int):
+    def get_text(self, amount: int, allowedLen: list):
         text = []
         for i in range(amount):
             current_index = random.randint(0, self.word_count-1)
-            while(len(self.words[current_index]) > allowedLen):
+            while(not(len(self.words[current_index]) >= allowedLen[0] and len(self.words[current_index]) <= allowedLen[1])):
                 current_index = random.randint(0, self.word_count-1)
 
             text.append(self.words[current_index])

@@ -17,7 +17,7 @@ class AttemptSidebar(Widget):
     def __init__(self,title: str, **kwargs):
         super().__init__(**kwargs)
         self.title = title
-        self.collapsibleGroup = Collapsible(id="attemptSidebarCollapsible", title=self.title)
+        self.collapsibleGroup = Collapsible(id="attemptSidebarCollapsible", title=self.title, collapsed=False)
         self.entries = []
         self.entry_count = 0
         self.querry_counter = 0
