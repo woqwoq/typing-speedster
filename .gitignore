@@ -1,0 +1,8 @@
+#Python Cache
+*.pyc
+
+#Logs
+logs/
+
+#Don't wanna get sued lol
+The_Oxford_3000.txt

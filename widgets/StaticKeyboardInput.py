@@ -5,6 +5,8 @@ from rich.text import Text
 from rich.style import Style
 from time import time
 
+from textual import log
+
 
 TEXT_STYLE = Style(color="white")
 CURSOR_STYLE = Style(color="black", bgcolor="white")
@@ -22,7 +24,6 @@ class TypingCompleted(Message):
 
 class StaticKeyboardInput(Static):
     can_focus = True
-    logger = open('logs/StaticKeyboardInput_LOG.ini', 'w')
 
     def __init__(self, placeholder: str = "", **kwargs):
         super().__init__(**kwargs)
@@ -39,7 +40,7 @@ class StaticKeyboardInput(Static):
 
 
     #TODO: Make it more efficient using sets
-    #TODO: Replace unmatched car to what it should be
+    #TODO: Replace unmatched char to what it should be
     def highlight_mismatches(self, t: Text)->Text:
         for i in range(len(t)):
             if(t[i].plain != self.placeholder[i]):
@@ -49,7 +50,6 @@ class StaticKeyboardInput(Static):
 
     def render_text(self):
         t = Text(self.text, TEXT_STYLE) +Text(self.placeholder[self.cursor_pos:], DIM_TEXT_STYLE)
-        
         t = self.highlight_mismatches(t)
 
         if self.cursor_pos < len(t):
@@ -58,6 +58,8 @@ class StaticKeyboardInput(Static):
             t.append(" ", CURSOR_STYLE)
 
         self.update(t)
+
+        log(f"render_text t:\n{t}")
 
         self.check_start_stop()
 
@@ -68,15 +70,19 @@ class StaticKeyboardInput(Static):
         if len(key) == 1 and key.isprintable():
             self.text = self.text[:self.cursor_pos] + key + self.text[self.cursor_pos:]
             self.cursor_pos += 1
+        # elif key == 'enter': 
+            # pass
+            #TODO: Jump to the next word after newline
+            # self.text = self.text[:self.cursor_pos] + '\n' + self.text[self.cursor_pos:]
+            # self.cursor_pos += 1
         elif key == "space":
-            self.text = self.text[:self.cursor_pos] + " " + self.text[self.cursor_pos:]
+            self.text = self.text[:self.cursor_pos] + ' ' + self.text[self.cursor_pos:]
             self.cursor_pos += 1
         elif key == "backspace" and self.cursor_pos > 0:
             self.text = self.text[:self.cursor_pos - 1] + self.text[self.cursor_pos:]
             self.cursor_pos -= 1
 
         self.render_text()
-
 
     def update_text(self, text: str):
         self.cursor_pos = 0
@@ -90,7 +96,6 @@ class StaticKeyboardInput(Static):
         self.update_text(self.placeholder)
 
     def check_start_stop(self):
-        logger = open('logs/Timer_LOG.ini', 'a+')
         if(self.cursor_pos == 1):
             self.time_start = time()
 
