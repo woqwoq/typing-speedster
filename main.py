@@ -39,8 +39,8 @@ class MyApp(App):
     maxWordLen = world_len_ranges[difficulty.value]
 
 
-    textToType = textGenerator.get_text(wordCount, maxWordLen)
-    # textToType = "fawd \nasd \ntest"
+    # textToType = textGenerator.get_text(wordCount, maxWordLen)
+    textToType = "#include <stdio.h>\nmain(){\nprintf('Hello World');\nreturn 0;\n}"
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
 

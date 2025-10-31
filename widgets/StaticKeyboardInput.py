@@ -59,9 +59,26 @@ class StaticKeyboardInput(Static):
 
         self.update(t)
 
-        log(f"render_text t:\n{t}")
-
         self.check_start_stop()
+
+
+    def jump_to_new_line(self):
+        log(f"Typed Text:{list(self.text)}")
+        log(f"Cursor: {self.cursor_pos}")
+
+        placeholder_text = list(self.placeholder)
+        current_cursor = self.cursor_pos
+        log(placeholder_text)
+
+        while(placeholder_text[current_cursor] != '\n'):
+            current_cursor+=1
+        current_cursor+=1
+
+        self.text += ''.join(placeholder_text[self.cursor_pos:current_cursor])
+        self.cursor_pos = current_cursor
+        log(f"Typed Text:{list(self.text)}")
+        log(f"Cursor: {self.cursor_pos}")
+        log(self.placeholder[current_cursor])
 
 
     def on_key(self, event: Key):
@@ -70,11 +87,9 @@ class StaticKeyboardInput(Static):
         if len(key) == 1 and key.isprintable():
             self.text = self.text[:self.cursor_pos] + key + self.text[self.cursor_pos:]
             self.cursor_pos += 1
-        # elif key == 'enter': 
-            # pass
-            #TODO: Jump to the next word after newline
-            # self.text = self.text[:self.cursor_pos] + '\n' + self.text[self.cursor_pos:]
-            # self.cursor_pos += 1
+        elif key == 'enter': 
+            # TODO: Jump to the next word after newline
+            self.jump_to_new_line()
         elif key == "space":
             self.text = self.text[:self.cursor_pos] + ' ' + self.text[self.cursor_pos:]
             self.cursor_pos += 1
