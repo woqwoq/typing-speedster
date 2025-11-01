@@ -3,10 +3,12 @@ from textual.containers import Container
 from textual.widgets import Label, Footer
 
 from widgets.AttemptSidebar import AttemptSidebar
-from widgets.StaticKeyboardInput import StaticKeyboardInput, TypingCompleted
+from widgets.StaticKeyboardInput import StaticKeyboardInput
+
 
 from textual import log
 
+from TypingComplete import TypingCompleted
 from Difficulty import Difficulty, order, world_len_ranges
 
 from TextGenerator import TextGenerator
@@ -39,9 +41,9 @@ class MyApp(App):
     maxWordLen = world_len_ranges[difficulty.value]
 
 
-    # textToType = textGenerator.get_text(wordCount, maxWordLen)
-    # textToType = "hello\nworld\nhi\nworld"
-    textToType = "#include <stdio.h>\nmain(){\nprintf('Hello World');\nreturn 0;\n}"
+    textToType = textGenerator.get_text(wordCount, maxWordLen)
+    # textToType = "hello\nworld\nhi\nworld\na\ns\nhi\nworld\na\ns"
+    # textToType = "#include <stdio.h>\nmain(){\nprintf('Hello World');\nreturn 0;\n}"
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
 
@@ -70,14 +72,14 @@ class MyApp(App):
         self.wordCount+=1
         self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
         self.generate_new_text()
-        self.keyboardInput.update_text(self.textToType)
+        self.keyboardInput.update_text(self.textToType, self.difficulty)
 
     def action_decrease_words(self):
         if(self.wordCount > 1):
             self.wordCount-=1
             self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
             self.generate_new_text()
-            self.keyboardInput.update_text(self.textToType)
+            self.keyboardInput.update_text(self.textToType, self.difficulty)
 
     def get_range_from_difficulty(self):
         return world_len_ranges[self.difficulty.value]
@@ -101,15 +103,15 @@ class MyApp(App):
         self.query_one('#keyboardInput').border_subtitle = f"{self.difficulty.name} Difficulty"
         self.update_maxWordLen()
         self.generate_new_text()
-        self.keyboardInput.update_text(self.textToType)
+        self.keyboardInput.update_text(self.textToType, self.difficulty)
 
     def action_restart(self):
         self.generate_new_text()
-        self.keyboardInput.update_text(self.textToType)
+        self.keyboardInput.update_text(self.textToType, self.difficulty)
 
     async def on_typing_completed(self, message: TypingCompleted):
         self.query_one('#wpmLabel').update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
-        self.attemptSidebar.add_entry(f"{message.wpm:.0f} WPM")
+        self.attemptSidebar.add_entry(f"{message.wpm:.0f} WPM", message.generate_tooltip())
 
 
 

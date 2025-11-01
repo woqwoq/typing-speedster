@@ -30,8 +30,10 @@ class AttemptSidebar(Widget):
         self.terminal_size = self.app.size
 
 
-    def add_entry(self, text: str):
-        current_entry = Static(f"{text}", id=f"entry_{self.entry_count}")
+    #TODO: If the tooltip text doesn't fit on the screen, cut it off with dots like "hello wo..." and add a clickable prev attempt opener
+    def add_entry(self, mainText: str, tooltip: list[str]):
+        current_entry = Static(f"[@click=null]{self.entry_count+1}. {mainText}[/]", id=f"entry_{self.entry_count}", classes="attemptEntry")
+        current_entry.tooltip = '\n'.join(tooltip)
         # log(f"Terminal Height: {self.terminal_size.height}")
 
         usable_terminal_height = self.terminal_size.height - UNUSABLE_HEIGHT
@@ -57,4 +59,4 @@ class AttemptSidebar(Widget):
 
 
     def action_add_entry(self):
-        self.add_entry(f"entry_{self.entry_count}")
+        self.add_entry(f"entry_{self.entry_count}", [""])

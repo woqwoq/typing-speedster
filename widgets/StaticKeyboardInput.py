@@ -1,9 +1,12 @@
-from textual.message import Message
 from textual.widgets import Static
 from textual.events import Key
 from rich.text import Text
 from rich.style import Style
-from time import time
+
+from Difficulty import Difficulty
+from TypingComplete import TypingCompleted
+
+import time
 
 from textual import log
 
@@ -14,12 +17,6 @@ DIM_TEXT_STYLE = Style(color="white", dim=True)
 UNMATCH_TEXT_STYLE = Style(color="white", bgcolor="red")
 
 
-class TypingCompleted(Message):
-    def __init__(self, wpm: float, cpm: float, text: str):
-        super().__init__()
-        self.wpm = wpm
-        self.cpm = cpm
-        self.text = text
 
 
 class StaticKeyboardInput(Static):
@@ -33,6 +30,9 @@ class StaticKeyboardInput(Static):
         self.time_start = None
         self.time_end = None
         self.time_recent = None
+
+        self.difficulty = Difficulty.DEFAULT
+        self.wordCount = len(placeholder.split())
         
     def on_mount(self):
         self._render_text()
@@ -103,7 +103,9 @@ class StaticKeyboardInput(Static):
 
         self._render_text()
 
-    def update_text(self, text: str):
+    def update_text(self, text: str, difficulty):
+        self.wordCount = len(text.split())
+        self.difficulty = difficulty
         self.cursor_pos = 0
         self.text = ""
         self.placeholder = text
@@ -112,19 +114,19 @@ class StaticKeyboardInput(Static):
         self._render_text()
 
     def reset_text(self):
-        self.update_text(self.placeholder)
+        self.update_text(self.placeholder, self.difficulty)
 
     def _check_start_stop(self):
         if(self.cursor_pos == 1):
-            self.time_start = time()
+            self.time_start = time.time()
 
         if(self.cursor_pos-1 == len(self.placeholder)-1):
-            self.time_end = time()
+            self.time_end = time.time()
             
             #TODO: Add hit-ratio influence for the formulas
             self.time_recent = self.time_end - self.time_start
             wpm = max((len(self.text.split())/self.time_recent)*60, ((len(self.text)/4.7)/self.time_recent)*60)
             cpm = (len( list(self.text) )/self.time_recent)*60 
 
-            self.post_message(TypingCompleted(wpm, cpm, self.text))
+            self.post_message(TypingCompleted(wpm, cpm, self.text, self.difficulty, self.wordCount))
             self.reset_text()

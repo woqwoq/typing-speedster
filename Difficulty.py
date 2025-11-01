@@ -8,6 +8,8 @@ class Difficulty(Enum):
     VERY_HARD = 3
     SELF_HARM = 4
 
+    DEFAULT = 5
+
 world_len_ranges = {
     0:[2 ,4],
     1: [2, 6],
