@@ -40,6 +40,7 @@ class MyApp(App):
 
 
     # textToType = textGenerator.get_text(wordCount, maxWordLen)
+    # textToType = "hello\nworld\nhi\nworld"
     textToType = "#include <stdio.h>\nmain(){\nprintf('Hello World');\nreturn 0;\n}"
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")

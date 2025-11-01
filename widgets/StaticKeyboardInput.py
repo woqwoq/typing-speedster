@@ -35,22 +35,22 @@ class StaticKeyboardInput(Static):
         self.time_recent = None
         
     def on_mount(self):
-        self.render_text()
+        self._render_text()
         self.focus()
 
 
     #TODO: Make it more efficient using sets
     #TODO: Replace unmatched char to what it should be
-    def highlight_mismatches(self, t: Text)->Text:
+    def _highlight_mismatches(self, t: Text)->Text:
         for i in range(len(t)):
             if(t[i].plain != self.placeholder[i]):
                 t.stylize(UNMATCH_TEXT_STYLE, i, i+1)
 
         return t
 
-    def render_text(self):
+    def _render_text(self):
         t = Text(self.text, TEXT_STYLE) +Text(self.placeholder[self.cursor_pos:], DIM_TEXT_STYLE)
-        t = self.highlight_mismatches(t)
+        t = self._highlight_mismatches(t)
 
         if self.cursor_pos < len(t):
             t.stylize(CURSOR_STYLE, self.cursor_pos, self.cursor_pos + 1)
@@ -59,45 +59,49 @@ class StaticKeyboardInput(Static):
 
         self.update(t)
 
-        self.check_start_stop()
+        self._check_start_stop()
 
 
-    def jump_to_new_line(self):
-        log(f"Typed Text:{list(self.text)}")
-        log(f"Cursor: {self.cursor_pos}")
+    #TODO: Fix cursor not displaying on newline char
+    def _jump_to_new_line(self):
+        # log(f"Typed Text:{list(self.text)}")
+        # log(f"Cursor: {self.cursor_pos}")
 
         placeholder_text = list(self.placeholder)
-        current_cursor = self.cursor_pos
-        log(placeholder_text)
 
-        while(placeholder_text[current_cursor] != '\n'):
-            current_cursor+=1
-        current_cursor+=1
+        if(placeholder_text[self.cursor_pos] == '\n'):
+            self.cursor_pos+=1
+            self.text += '\n'
 
-        self.text += ''.join(placeholder_text[self.cursor_pos:current_cursor])
-        self.cursor_pos = current_cursor
-        log(f"Typed Text:{list(self.text)}")
-        log(f"Cursor: {self.cursor_pos}")
-        log(self.placeholder[current_cursor])
+        # log(f"Typed Text:{list(self.text)}")
+        # log(f"Cursor: {self.cursor_pos}")
 
 
     def on_key(self, event: Key):
         key = event.key
 
         if len(key) == 1 and key.isprintable():
+            #Character can't be added if we're on a newline
+            if(self.placeholder[self.cursor_pos] == '\n'):
+                return
+            
             self.text = self.text[:self.cursor_pos] + key + self.text[self.cursor_pos:]
             self.cursor_pos += 1
         elif key == 'enter': 
-            # TODO: Jump to the next word after newline
-            self.jump_to_new_line()
+            #Jump to the character after newline to continue
+            self._jump_to_new_line()
         elif key == "space":
+            #Character can't be added if we're on a newline
+            if(self.placeholder[self.cursor_pos] == '\n'):
+                return
+
             self.text = self.text[:self.cursor_pos] + ' ' + self.text[self.cursor_pos:]
             self.cursor_pos += 1
         elif key == "backspace" and self.cursor_pos > 0:
             self.text = self.text[:self.cursor_pos - 1] + self.text[self.cursor_pos:]
             self.cursor_pos -= 1
 
-        self.render_text()
+        self._render_text()
 
     def update_text(self, text: str):
         self.cursor_pos = 0
@@ -105,12 +109,12 @@ class StaticKeyboardInput(Static):
         self.placeholder = text
         self.time_start = None
         self.time_end = None
-        self.render_text()
+        self._render_text()
 
     def reset_text(self):
         self.update_text(self.placeholder)
 
-    def check_start_stop(self):
+    def _check_start_stop(self):
         if(self.cursor_pos == 1):
             self.time_start = time()
 
