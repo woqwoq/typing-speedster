@@ -57,6 +57,5 @@ class AttemptSidebar(Widget):
             self.entry_count += 1
             self.collapsibleGroup.query_one('#mainLabel').mount(current_entry)
 
-
     def action_add_entry(self):
         self.add_entry(f"entry_{self.entry_count}", [""])

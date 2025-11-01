@@ -3,7 +3,7 @@ from textual.message import Message
 import time
 
 class TypingCompleted(Message):
-    def __init__(self, wpm: float, cpm: float, text: str, difficulty: Difficulty, wordCount: int):
+    def __init__(self, wpm: float, cpm: float, text: str, difficulty: Difficulty, wordCount: int, accuracy_info: str):
         super().__init__()
         self.wpm = wpm
         self.cpm = cpm
@@ -11,12 +11,14 @@ class TypingCompleted(Message):
         self.time = time.ctime(time.time())
         self.difficulty = difficulty
         self.wordCount = wordCount
+        self.accuracy_info = accuracy_info
 
 
     def generate_tooltip(self):
         return [f"WPM:{str(round(self.wpm))}",
                 f"CPM:{str(round(self.cpm))}",
                 f"Text:\"{self.text}\"",
-                f"Date:{self.time}",
                 f"Difficulty:{self.difficulty.name}",
-                f"Words:{self.wordCount}"]
+                f"Words:{self.wordCount}",
+                f"Date:{self.time}",
+                f"Accuracy:{self.accuracy_info}"]

@@ -5,6 +5,7 @@ from rich.style import Style
 
 from Difficulty import Difficulty
 from TypingComplete import TypingCompleted
+from Utils import remove_if_greater
 
 import time
 
@@ -17,21 +18,23 @@ DIM_TEXT_STYLE = Style(color="white", dim=True)
 UNMATCH_TEXT_STYLE = Style(color="white", bgcolor="red")
 
 
-
-
 class StaticKeyboardInput(Static):
     can_focus = True
 
     def __init__(self, placeholder: str = "", **kwargs):
         super().__init__(**kwargs)
+
         self.placeholder = placeholder
         self.text = ""
         self.cursor_pos = 0
+
         self.time_start = None
         self.time_end = None
         self.time_recent = None
 
-        self.difficulty = Difficulty.DEFAULT
+        self.mismatches = set()
+
+        self.difficulty = Difficulty.DEFAULT #TODO: Fix the default difficulty to app's default difficulty
         self.wordCount = len(placeholder.split())
         
     def on_mount(self):
@@ -39,12 +42,27 @@ class StaticKeyboardInput(Static):
         self.focus()
 
 
-    #TODO: Make it more efficient using sets
     #TODO: Replace unmatched char to what it should be
     def _highlight_mismatches(self, t: Text)->Text:
-        for i in range(len(t)):
-            if(t[i].plain != self.placeholder[i]):
-                t.stylize(UNMATCH_TEXT_STYLE, i, i+1)
+        if self.cursor_pos == 0:
+            return t
+        
+        #At this point cursor is one position in front of a typed character
+        current_cursor = self.cursor_pos-1
+        
+        
+        if(t[current_cursor].plain != self.placeholder[current_cursor]):
+            self.mismatches.add(current_cursor)
+            t.stylize(UNMATCH_TEXT_STYLE, current_cursor, current_cursor+1)
+        elif current_cursor in self.mismatches:
+            self.mismatches.remove(current_cursor)
+
+        #Remove mismatches if a cursor has moved back
+        self.mismatches = remove_if_greater(self.mismatches, current_cursor)
+
+        #Highlight old mismatches
+        for mismatch_index in self.mismatches:
+            t.stylize(UNMATCH_TEXT_STYLE, mismatch_index, mismatch_index+1)
 
         return t
 
@@ -58,7 +76,6 @@ class StaticKeyboardInput(Static):
             t.append(" ", CURSOR_STYLE)
 
         self.update(t)
-
         self._check_start_stop()
 
 
@@ -116,6 +133,15 @@ class StaticKeyboardInput(Static):
     def reset_text(self):
         self.update_text(self.placeholder, self.difficulty)
 
+    def _calculate_accuracy(self):
+        return 1-len(self.mismatches)/len(self.text)
+
+    def _calculate_raw_wpm(self):
+        return max((len(self.text.split())/self.time_recent)*60, ((len(self.text)/4.7)/self.time_recent)*60)
+    
+    def _calculate_raw_cpm(self):
+        return (len( list(self.text) )/self.time_recent)*60 
+
     def _check_start_stop(self):
         if(self.cursor_pos == 1):
             self.time_start = time.time()
@@ -125,8 +151,11 @@ class StaticKeyboardInput(Static):
             
             #TODO: Add hit-ratio influence for the formulas
             self.time_recent = self.time_end - self.time_start
-            wpm = max((len(self.text.split())/self.time_recent)*60, ((len(self.text)/4.7)/self.time_recent)*60)
-            cpm = (len( list(self.text) )/self.time_recent)*60 
 
-            self.post_message(TypingCompleted(wpm, cpm, self.text, self.difficulty, self.wordCount))
+            wpm = self._calculate_raw_wpm()
+            cpm = self._calculate_raw_cpm()
+
+            accuraacy_info = f"{len(self.mismatches)}/{len(self.text)}/{round(self._calculate_accuracy()*100)}%"
+
+            self.post_message(TypingCompleted(wpm, cpm, self.text, self.difficulty, self.wordCount, accuraacy_info))
             self.reset_text()
