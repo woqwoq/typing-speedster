@@ -17,7 +17,7 @@ from TextGenerator import TextGenerator
 UNALLOWED_CHARS = {',', '.', "'", "-"}
 
 DEFAULT_DIFFICULTY = Difficulty.EASY
-DEFUALT_WORD_COUNT = 5
+DEFUALT_WORD_COUNT = 2
 DEFAULT_CSS_PATH = "styles/styles.css"
 DEFAULT_TEXT_GENERATOR_SEED = 123
 DEFUALT_WORD_DICTIONARY_PATH = "The_Oxford_3000.txt"
@@ -41,9 +41,9 @@ class MyApp(App):
     maxWordLen = world_len_ranges[difficulty.value]
 
 
-    # textToType = textGenerator.get_text(wordCount, maxWordLen)
+    textToType = textGenerator.get_text(wordCount, maxWordLen)
     # textToType = "hello\nworld\nhi\nworld\na\ns\nhi\nworld\na\ns"
-    textToType = "#include <stdio.h>\nmain(){\nprintf('Hello World');\nreturn 0;\n}"
+    # textToType = "#include <stdio.h>\nmain(){\nprintf('Hello World');\nreturn 0;\n}"
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
 

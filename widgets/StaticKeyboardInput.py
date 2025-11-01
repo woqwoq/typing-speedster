@@ -34,6 +34,8 @@ class StaticKeyboardInput(Static):
 
         self.mismatches = set()
 
+        self.timepoints = []
+
         self.difficulty = Difficulty.DEFAULT #TODO: Fix the default difficulty to app's default difficulty
         self.wordCount = len(placeholder.split())
         
@@ -81,19 +83,13 @@ class StaticKeyboardInput(Static):
 
     #TODO: Fix cursor not displaying on newline char
     def _jump_to_new_line(self):
-        # log(f"Typed Text:{list(self.text)}")
-        # log(f"Cursor: {self.cursor_pos}")
-
         placeholder_text = list(self.placeholder)
 
         if(placeholder_text[self.cursor_pos] == '\n'):
             self.cursor_pos+=1
             self.text += '\n'
 
-        # log(f"Typed Text:{list(self.text)}")
-        # log(f"Cursor: {self.cursor_pos}")
-
-
+    #TODO: Fix the tabs and non-alphabet characters
     def on_key(self, event: Key):
         key = event.key
 
@@ -120,14 +116,18 @@ class StaticKeyboardInput(Static):
 
         self._render_text()
 
-    def update_text(self, text: str, difficulty):
-        self.wordCount = len(text.split())
+    def update_text(self, new_text: str, difficulty):
+        self.wordCount = len(new_text.split())
         self.difficulty = difficulty
+
         self.cursor_pos = 0
         self.text = ""
-        self.placeholder = text
+        self.placeholder = new_text
+
         self.time_start = None
         self.time_end = None
+        self.timepoints = []
+
         self._render_text()
 
     def reset_text(self):
@@ -143,6 +143,9 @@ class StaticKeyboardInput(Static):
         return (len( list(self.text) )/self.time_recent)*60 
 
     def _check_start_stop(self):
+        if(self.cursor_pos > 1 and self.cursor_pos-1 < len(self.placeholder)):
+            self.timepoints.append(round(time.time() - self.time_start, 5))
+            log(f"word=\"{self.text}\"\ndata={self.timepoints}")
         if(self.cursor_pos == 1):
             self.time_start = time.time()
 
