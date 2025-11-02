@@ -24,7 +24,11 @@ SPECIAL_CHARACTER_MAP ={"number_sign"           : "#",
                         "right_square_bracket"  : "]",
                         "quotation_mark"        : "\"",
                         "semicolon"             : ";",
-                        "colon"                 : ":"}
+                        "colon"                 : ":",
+                        "tab"                   : "\t",
+                        "minus"                 : "-",
+                        "plus"                  : "+",
+                        "equals_sign"           : "=",}
 
 
 TEXT_STYLE = Style(color="white")
@@ -107,6 +111,7 @@ class StaticKeyboardInput(Static):
     #TODO: Fix the tabs
     def on_key(self, event: Key):
         key = event.key
+        log(key)
         if len(key) == 1 and key.isprintable():
             #Character can't be added if we're on a newline
             if(self.placeholder[self.cursor_pos] == '\n'):
@@ -130,6 +135,9 @@ class StaticKeyboardInput(Static):
         elif key in SPECIAL_CHARACTER_MAP:
             if(self.placeholder[self.cursor_pos] == '\n'):
                 return
+            
+            if(key == 'tab'):
+                event.stop()
             
             self.text = self.text[:self.cursor_pos] + SPECIAL_CHARACTER_MAP[key] + self.text[self.cursor_pos:]
             self.cursor_pos += 1
@@ -166,7 +174,7 @@ class StaticKeyboardInput(Static):
     def _check_start_stop(self):
         if(self.cursor_pos > 1 and self.cursor_pos-1 < len(self.placeholder)):
             self.timepoints.append(round(time.time() - self.time_start, 5))
-            log(f"word=\"{self.text}\"\ndata={self.timepoints}")
+            # log(f"word=\"{self.text}\"\ndata={self.timepoints}")
         if(self.cursor_pos == 1):
             self.time_start = time.time()
 

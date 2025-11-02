@@ -1,4 +1,5 @@
 from textual.app import App
+from textual.screen import Screen
 from textual.containers import Container
 from textual.widgets import Label, Footer
 
@@ -23,7 +24,7 @@ DEFAULT_TEXT_GENERATOR_SEED = 123
 DEFUALT_WORD_DICTIONARY_PATH = "The_Oxford_3000.txt"
 
 class MyApp(App):
-    
+
     BINDINGS =[
         ('ctrl+d', 'increase_words', 'WORDS+'),
         ('ctrl+a', 'decrease_words', 'WORDS-'),
@@ -43,7 +44,7 @@ class MyApp(App):
 
     # textToType = textGenerator.get_text(wordCount, maxWordLen)
     # textToType = "hello\nworld\nhi\nworld\na\ns\nhi\nworld\na\ns"
-    textToType = "#include <stdio.h>\nmain(){\nprintf('Hello World');\nreturn 0;\n}"
+    textToType = """class TabExampleApp(App):\n\tdef compose(self) -> ComposeResult:\n\t\tyield TextArea(id="editor")\n\t\tyield Input(placeholder="Type here...")"""
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
 
