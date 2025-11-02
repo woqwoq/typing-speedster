@@ -11,6 +11,21 @@ import time
 
 from textual import log
 
+SPECIAL_CHARACTER_MAP ={"number_sign"           : "#",
+                        "less_than_sign"        : "<",
+                        "greater_than_sign"     : ">",
+                        "full_stop"             : ".",
+                        "left_parenthesis"      : "(",
+                        "right_parenthesis"     : ")",
+                        "apostrophe"            : "'",
+                        "left_curly_bracket"    : "{",
+                        "right_curly_bracket"   : "]",
+                        "left_square_bracket"   : "[",
+                        "right_square_bracket"  : "]",
+                        "quotation_mark"        : "\"",
+                        "semicolon"             : ";",
+                        "colon"                 : ":"}
+
 
 TEXT_STYLE = Style(color="white")
 CURSOR_STYLE = Style(color="black", bgcolor="white")
@@ -89,10 +104,9 @@ class StaticKeyboardInput(Static):
             self.cursor_pos+=1
             self.text += '\n'
 
-    #TODO: Fix the tabs and non-alphabet characters
+    #TODO: Fix the tabs
     def on_key(self, event: Key):
         key = event.key
-
         if len(key) == 1 and key.isprintable():
             #Character can't be added if we're on a newline
             if(self.placeholder[self.cursor_pos] == '\n'):
@@ -113,6 +127,13 @@ class StaticKeyboardInput(Static):
         elif key == "backspace" and self.cursor_pos > 0:
             self.text = self.text[:self.cursor_pos - 1] + self.text[self.cursor_pos:]
             self.cursor_pos -= 1
+        elif key in SPECIAL_CHARACTER_MAP:
+            if(self.placeholder[self.cursor_pos] == '\n'):
+                return
+            
+            self.text = self.text[:self.cursor_pos] + SPECIAL_CHARACTER_MAP[key] + self.text[self.cursor_pos:]
+            self.cursor_pos += 1
+
 
         self._render_text()
 

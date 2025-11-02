@@ -1,4 +1,6 @@
 from textual import log
+import numpy as np
+
 word="the find ironrude  flag mom safe his bite tea"
 data=[0.09623, 0.19995, 0.32818, 2.02798, 2.09321, 2.26131, 2.33726, 2.38723, 2.5194, 2.5853, 2.7284, 2.95142, 5.39564,
 5.46967, 5.57683, 5.65851, 5.77244, 6.81476, 7.23391, 7.32829, 7.4136, 7.54837, 8.38022, 8.51546, 8.57685, 8.74353,
@@ -32,7 +34,9 @@ class ScatterApp(App[None]):
     def on_mount(self) -> None:
         self.query_one(PlotextPlot).styles.height = '50%'
         self.query_one(PlotextPlot).styles.background = 'red'
+
         plt = self.query_one(PlotextPlot).plt
+        log(plt.ylim(np.max(self.get_wpm_points())/4, np.max(self.get_wpm_points())))
         plt.plot(self.get_wpm_points(), marker ="braille")
         plt.title("Scatter Plot") # to apply a title
 
