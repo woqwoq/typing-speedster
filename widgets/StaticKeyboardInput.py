@@ -5,6 +5,7 @@ from rich.style import Style
 
 from Difficulty import Difficulty
 from TypingComplete import TypingCompleted
+from KeyPressed import KeyPressed
 from Utils import remove_if_greater
 
 import time
@@ -115,6 +116,8 @@ class StaticKeyboardInput(Static):
             if(self.placeholder[self.cursor_pos] == '\n'):
                 return
             
+            self.post_message(KeyPressed(key))
+
             self.text = self.text[:self.cursor_pos] + key + self.text[self.cursor_pos:]
             self.cursor_pos += 1
         elif key == 'enter': 

@@ -11,6 +11,7 @@ from widgets.KeypressDisplay import KeypressDisplay
 from textual import log
 
 from TypingComplete import TypingCompleted
+from KeyPressed import KeyPressed
 from Difficulty import Difficulty, order, world_len_ranges
 
 from TextGenerator import TextGenerator
@@ -56,15 +57,15 @@ class MyApp(App):
 
     attemptSidebar = AttemptSidebar(id='attemptSidebarCollapsible', title='Previous Attempts')
 
-    keypressDisplay = KeypressDisplay(id="keypressDisplay")
-    keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
+    # keypressDisplay = KeypressDisplay(id="keypressDisplay")
+    # keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
 
     def compose(self):
         yield self.welcomeLabel
         yield self.labels
         yield self.keyboardInputContainer
         yield self.attemptSidebar
-        yield self.keypressDisplayContainer
+        # yield self.keypressDisplayContainer
         yield Footer()
 
     def on_mount(self):
@@ -121,6 +122,8 @@ class MyApp(App):
         self.query_one('#wpmLabel').update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
         self.attemptSidebar.add_entry(f"{message.wpm:.0f} WPM", message.generate_tooltip())
 
-
+    # async def on_key_pressed(self, message: KeyPressed):
+    #     key = message.key.lower()
+    #     self.keypressDisplay.highlight_key(key)
 
 MyApp().run()

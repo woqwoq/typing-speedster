@@ -1,9 +1,10 @@
 from textual.widgets import Static
 from textual.events import Key
+from textual import log
+
 from rich.text import Text
 from rich.style import Style
 
-from textual import log
 from time import time
 
 from widgets.StaticKeyboardInput import DIM_TEXT_STYLE, UNMATCH_TEXT_STYLE
@@ -13,6 +14,8 @@ DEFAULT_OFFSET = 2
 DEFAULT_STYLE = DIM_TEXT_STYLE
 HIGHLIGHT_STYLE = UNMATCH_TEXT_STYLE
 
+
+#TODO: Add a primitive animation because of performance drops.
 class KeypressDisplay(Static):
 
     DEFAULT_CSS ="""
@@ -50,6 +53,9 @@ class KeypressDisplay(Static):
 
 
     def highlight_key(self, key):
+        if key not in self.index_map:
+            return
+        
         key_pos = self.index_map[key]
         start_time = time()
         duration = 0.5
@@ -65,17 +71,13 @@ class KeypressDisplay(Static):
 
         fade()
 
-
     def on_key(self, event: Key):
         key = event.key.lower()
 
         if(key in self.index_map):
             self.highlight_key(key)
         
-    
     def on_mount(self):
         self.offset_text()
         self.generate_index_map()
         self.update(self.text)
-
-        self.focus()
