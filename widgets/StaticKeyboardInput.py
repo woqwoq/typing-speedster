@@ -108,10 +108,8 @@ class StaticKeyboardInput(Static):
             self.cursor_pos+=1
             self.text += '\n'
 
-    #TODO: Fix the tabs
     def on_key(self, event: Key):
         key = event.key
-        log(key)
         if len(key) == 1 and key.isprintable():
             #Character can't be added if we're on a newline
             if(self.placeholder[self.cursor_pos] == '\n'):

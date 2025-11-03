@@ -1,7 +1,11 @@
 #keyboardInput{
     text-wrap: wrap;
+    height: auto;
+}
+
+#keyboardInputContainer{
     margin: 1 3;
-    height: 60%;
+    height: 30%;
 }
 
 #attemptSidebarCollapsible{

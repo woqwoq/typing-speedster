@@ -1,6 +1,6 @@
 from textual.app import App
 from textual.screen import Screen
-from textual.containers import Container
+from textual.containers import Container, ScrollableContainer
 from textual.widgets import Label, Footer
 
 from widgets.AttemptSidebar import AttemptSidebar
@@ -42,13 +42,15 @@ class MyApp(App):
     maxWordLen = world_len_ranges[difficulty.value]
 
 
-    # textToType = textGenerator.get_text(wordCount, maxWordLen)
-    # textToType = "hello\nworld\nhi\nworld\na\ns\nhi\nworld\na\ns"
-    textToType = """class TabExampleApp(App):\n\tdef compose(self) -> ComposeResult:\n\t\tyield TextArea(id="editor")\n\t\tyield Input(placeholder="Type here...")"""
+    textToType = textGenerator.get_text(wordCount, maxWordLen)
+    # textToType = "hello\nworld\nhi\nworld\na\ns\nhi\nworld\na\nshello\nworld\nhi\nworld\na\ns\nhi\nworld\na\nshello\nworld\nhi\nworld\na\ns\nhi\nworld\na\ns"
+    # textToType = """class TabExampleApp(App):\n\tdef compose(self) -> ComposeResult:\n\t\tyield TextArea(id="editor")\n\t\tyield Input(placeholder="Type here...")"""
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
 
     keyboardInput = StaticKeyboardInput(id='keyboardInput', placeholder=textToType)
+    keyboardInputContainer = ScrollableContainer(keyboardInput, id="keyboardInputContainer")
+
     labels = Container( Label("15", id="timerLabel"), Label("", id="wpmLabel"), id="labelContainer")
 
     attemptSidebar = AttemptSidebar(id='attemptSidebarCollapsible', title='Previous Attempts')
@@ -56,29 +58,29 @@ class MyApp(App):
     def compose(self):
         yield self.welcomeLabel
         yield self.labels
-        yield self.keyboardInput
+        yield self.keyboardInputContainer
         yield self.attemptSidebar
         yield Footer()
 
     def on_mount(self):
-        self.keyboardInput.border_title = f"{self.wordCount} Word Test"
-        self.keyboardInput.border_subtitle = f"{repr(self.difficulty.name)} Difficulty"
-        self.keyboardInput.styles.border_title_align = "center"
-        self.keyboardInput.styles.border = ("heavy", "blue")
+        self.keyboardInputContainer.border_title = f"{self.wordCount} Word Test"
+        self.keyboardInputContainer.border_subtitle = f"{repr(self.difficulty.name)} Difficulty"
+        self.keyboardInputContainer.styles.border_title_align = "center"
+        self.keyboardInputContainer.styles.border = ("heavy", "blue")
 
     def generate_new_text(self):
         self.textToType = self.textGenerator.get_text(self.wordCount, self.maxWordLen)
 
     def action_increase_words(self):
         self.wordCount+=1
-        self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
+        self.query_one('#keyboardInputContainer').border_title = f"{self.wordCount} Word Test"
         self.generate_new_text()
         self.keyboardInput.update_text(self.textToType, self.difficulty)
 
     def action_decrease_words(self):
         if(self.wordCount > 1):
             self.wordCount-=1
-            self.query_one('#keyboardInput').border_title = f"{self.wordCount} Word Test"
+            self.query_one('#keyboardInputContainer').border_title = f"{self.wordCount} Word Test"
             self.generate_new_text()
             self.keyboardInput.update_text(self.textToType, self.difficulty)
 
@@ -101,7 +103,7 @@ class MyApp(App):
 
     def modify_difficulty(self, new_difficulty_index):
         self.difficulty = order[new_difficulty_index]
-        self.query_one('#keyboardInput').border_subtitle = f"{self.difficulty.name} Difficulty"
+        self.query_one('#keyboardInputContainer').border_subtitle = f"{self.difficulty.name} Difficulty"
         self.update_maxWordLen()
         self.generate_new_text()
         self.keyboardInput.update_text(self.textToType, self.difficulty)
