@@ -5,6 +5,7 @@ from textual.widgets import Label, Footer
 
 from widgets.AttemptSidebar import AttemptSidebar
 from widgets.StaticKeyboardInput import StaticKeyboardInput
+from widgets.KeypressDisplay import KeypressDisplay
 
 
 from textual import log
@@ -42,8 +43,8 @@ class MyApp(App):
     maxWordLen = world_len_ranges[difficulty.value]
 
 
-    textToType = textGenerator.get_text(wordCount, maxWordLen)
-    # textToType = "hello\nworld\nhi\nworld\na\ns\nhi\nworld\na\nshello\nworld\nhi\nworld\na\ns\nhi\nworld\na\nshello\nworld\nhi\nworld\na\ns\nhi\nworld\na\ns"
+    # textToType = textGenerator.get_text(wordCount, maxWordLen)
+    textToType = "hello\nworld\nhi\nworld\na\ns\nhi\nworld\na\ns"
     # textToType = """class TabExampleApp(App):\n\tdef compose(self) -> ComposeResult:\n\t\tyield TextArea(id="editor")\n\t\tyield Input(placeholder="Type here...")"""
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
@@ -55,11 +56,15 @@ class MyApp(App):
 
     attemptSidebar = AttemptSidebar(id='attemptSidebarCollapsible', title='Previous Attempts')
 
+    keypressDisplay = KeypressDisplay(id="keypressDisplay")
+    keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
+
     def compose(self):
         yield self.welcomeLabel
         yield self.labels
         yield self.keyboardInputContainer
         yield self.attemptSidebar
+        yield self.keypressDisplayContainer
         yield Footer()
 
     def on_mount(self):

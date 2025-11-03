@@ -5,7 +5,14 @@
 
 #keyboardInputContainer{
     margin: 1 3;
-    height: 30%;
+    height: auto;
+    max-height: 40%;
+}
+
+#keypressDisplayContainer{
+    margin: 1 3;
+    width: 100%;
+    align: center middle;
 }
 
 #attemptSidebarCollapsible{

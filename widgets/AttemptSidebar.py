@@ -31,6 +31,7 @@ class AttemptSidebar(Widget):
 
 
     #TODO: If the tooltip text doesn't fit on the screen, cut it off with dots like "hello wo..." and add a clickable prev attempt opener
+    #TODO: Or make put it inside the scrollable container
     def add_entry(self, mainText: str, tooltip: list[str]):
         current_entry = Static(f"[@click=null]{self.entry_count+1}. {mainText}[/]", id=f"entry_{self.entry_count}", classes="attemptEntry")
         current_entry.tooltip = '\n'.join(tooltip)
