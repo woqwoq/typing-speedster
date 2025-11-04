@@ -4,8 +4,8 @@ from rich.text import Text
 from rich.style import Style
 
 from Difficulty import Difficulty
-from TypingComplete import TypingCompleted
-from KeyPressed import KeyPressed
+from messages.TypingComplete import TypingCompleted
+from messages.KeyPressed import KeyPressed
 from Utils import remove_if_greater
 
 import time

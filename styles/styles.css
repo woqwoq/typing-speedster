@@ -53,3 +53,7 @@
     border: tall blue;
 }
 
+Tooltip{
+    max-width: 80%;
+}
+

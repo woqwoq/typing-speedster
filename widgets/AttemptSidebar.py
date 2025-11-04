@@ -7,6 +7,8 @@ from textual import log
 from widgets.StaticKeyboardInput import TypingCompleted
 
 UNUSABLE_HEIGHT = 4
+CSS_TOOLTIP_MAX_WIDTH = 60
+POSTFIX_LENGTH = 3
 
 class AttemptSidebar(Widget):
 
@@ -30,10 +32,21 @@ class AttemptSidebar(Widget):
         self.terminal_size = self.app.size
 
 
+    def shorten_tooltip_length(self, tooltip):
+        max_allowed_width = round(self.app.size.width*(CSS_TOOLTIP_MAX_WIDTH)/100)-POSTFIX_LENGTH
+        if(len(tooltip[-1]) > max_allowed_width):
+            tooltip[-1] = ''.join(list(tooltip[-1])[:max_allowed_width])+"...\""
+
+        return tooltip
+
+
     #TODO: If the tooltip text doesn't fit on the screen, cut it off with dots like "hello wo..." and add a clickable prev attempt opener
     #TODO: Or make put it inside the scrollable container
     def add_entry(self, mainText: str, tooltip: list[str]):
         current_entry = Static(f"[@click=null]{self.entry_count+1}. {mainText}[/]", id=f"entry_{self.entry_count}", classes="attemptEntry")
+
+        #Shorten the tooltip if needed
+        tooltip = self.shorten_tooltip_length(tooltip)
         current_entry.tooltip = '\n'.join(tooltip)
         # log(f"Terminal Height: {self.terminal_size.height}")
 

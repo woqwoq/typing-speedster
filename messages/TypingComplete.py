@@ -17,8 +17,8 @@ class TypingCompleted(Message):
     def generate_tooltip(self):
         return [f"WPM:{str(round(self.wpm))}",
                 f"CPM:{str(round(self.cpm))}",
-                f"Text:\"{self.text}\"",
+                f"Accuracy:{self.accuracy_info}",
                 f"Difficulty:{self.difficulty.name}",
                 f"Words:{self.wordCount}",
                 f"Date:{self.time}",
-                f"Accuracy:{self.accuracy_info}"]
+                f"Text:\"{self.text}\""]
