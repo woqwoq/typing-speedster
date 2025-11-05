@@ -1,0 +1,36 @@
+Screen{
+    align: center middle;
+}
+
+#infoLabelContainer{
+    margin: 0 3;
+    layout: horizontal;
+    height: 5;
+
+}
+
+#infoLabelLeft{
+    text-align: left;
+    width: 50%;
+}
+
+#infoLabelRight{
+    text-align: right;
+    width: 50%;
+}
+
+
+#textLabelContainer{
+    margin: 0 3;
+}
+
+
+#resultsTitle{
+    text-align: center;
+}
+
+#mainPlot{
+    width: 100%;
+    height: 50%;
+    margin: 0 3;
+}
