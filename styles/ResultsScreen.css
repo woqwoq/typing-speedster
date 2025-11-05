@@ -2,11 +2,23 @@ Screen{
     align: center middle;
 }
 
-#infoLabelContainer{
+#bigContainer{
+    width: 100%;
     margin: 0 3;
     layout: horizontal;
-    height: 5;
+}
 
+#mistakesContainer{
+    layout: horizontal;
+    height: 5;
+    width: 50%;
+}
+
+/* info block should be done */
+#infoLabelContainer{
+    layout: horizontal;
+    height: 5;
+    width: 50%;
 }
 
 #infoLabelLeft{
@@ -15,10 +27,10 @@ Screen{
 }
 
 #infoLabelRight{
-    text-align: right;
-    width: 50%;
+    text-align: left;
+    width: auto;
 }
-
+/* info */
 
 #textLabelContainer{
     margin: 0 3;
