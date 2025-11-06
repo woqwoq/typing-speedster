@@ -24,7 +24,7 @@ class KeypressDisplay(Static):
     }
     """
 
-    can_focus = True
+    can_focus = False
 
     layout = "qwertyuiop\nasdfghjkl\nzxcvbnm"
     text: Text = Text(layout, DEFAULT_STYLE)
@@ -67,7 +67,7 @@ class KeypressDisplay(Static):
             t.stylize(blended_style, key_pos, key_pos+1)
             self.update(t)
             if alpha > 0:
-                self.set_timer(0.005, fade)
+                self.set_timer(0.1, fade)
 
         fade()
 

@@ -1,105 +1,95 @@
 from textual.screen import Screen
-from textual.widgets import Static
+from textual.widgets import Static, Footer
 from textual.containers import Container, ScrollableContainer
 from textual_plotext import PlotextPlot
 from textual.app import App
+from textual import log
+from messages.TypingComplete import TypingCompleted
 
-
-word="the find ironrude  flag mom safe his bite tea"
-data=[0.09623, 0.19995, 0.32818, 2.02798, 2.09321, 2.26131, 2.33726, 2.38723, 2.5194, 2.5853, 2.7284, 2.95142, 5.39564,
-5.46967, 5.57683, 5.65851, 5.77244, 6.81476, 7.23391, 7.32829, 7.4136, 7.54837, 8.38022, 8.51546, 8.57685, 8.74353,
-9.12128, 11.48832, 11.53899, 11.67891, 11.77251, 12.00076, 14.05912, 14.12718, 14.29532, 14.6036, 15.60142, 15.85549,
-15.95795, 16.43433, 16.85646, 17.26867, 17.65022, 18.87732]
-
-word = word[1:]
-word_count = len(word)
-
-#Need to dramatise drops more
 def calculate_wpm(text, time):
     return (len(text)/4.7/time)*60
 
+def _calculate_raw_wpm(text, time):
+    return max((len(text.split())/time)*60, ((len(text)/4.7)/time)*60)
 
 class ResultsScreen(Screen):
 
+    BINDINGS = [("ctrl+z", "close_screen", "Close")]
     CSS_PATH='styles/ResultsScreen.css'
 
-    resultsTitle = Static("Results", id="resultsTitle")
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
-    mainPlot = PlotextPlot(id="mainPlot")
-
-    infoLabelLeft = Static("asd", id="infoLabelLeft")
-    infoLabelRight = Static("asd", id="infoLabelRight")
-    infoLabelContainer = Container(infoLabelLeft, infoLabelRight, id="infoLabelContainer")
-
-    textLabel = Static("asd", id="textLabel")
-    textLabelContainer = ScrollableContainer(textLabel, id="textLabelContainer")
-
-    mistakesContainer = ScrollableContainer(id="mistakesContainer")
-
-    wpm = 111
-    cpm = 444
-    accuracy_info = "100/0/150%"
-    difficulty = "EASY"
-    wordCount = 12
-    time = "11 nov 2025 22:35 2025 asd"
-    text = word
+    def update(self, message: TypingCompleted):
+        self.wpm = message.wpm
+        self.cpm = message.cpm
+        self.accuracy_info = message.accuracy_info
+        self.difficulty = message.difficulty
+        self.wordCount = message.wordCount
+        self.time = message.time
+        self.text = message.text
+        self.timepoints = message.timepoints
 
     def compose(self):
-        yield self.resultsTitle
-        yield self.mainPlot
-        yield Container(self.infoLabelContainer, self.mistakesContainer, id="bigContainer")
-        yield self.textLabelContainer
-
+        resultsTitle = Static("Results", id="resultsTitle")
+        mainPlot = PlotextPlot(id="mainPlot")
+        infoLabelLeft = Static("asd", id="infoLabelLeft")
+        infoLabelRight = Static("asd", id="infoLabelRight")
+        infoLabelContainer = Container(infoLabelLeft, infoLabelRight, id="infoLabelContainer")
+        textLabel = Static("asd", id="textLabel")
+        textLabelContainer = ScrollableContainer(textLabel, id="textLabelContainer")
+        mistakesContainer = ScrollableContainer(id="mistakesContainer")
+        
+        yield resultsTitle
+        yield mainPlot
+        yield Container(infoLabelContainer, mistakesContainer, id="bigContainer")
+        yield textLabelContainer
+        yield Footer()
 
     def get_wpm_points(self):
+        text = self.text[1:]
         wpm_points = []
-        for i in range(len(data)):
-            wpm_points.append(calculate_wpm(word[:i], data[i])) 
+        for i in range(len(self.timepoints)):
+            wpm_points.append(calculate_wpm(text[:i], self.timepoints[i])) 
         return wpm_points
+    
+    def _render_plot(self):
+        self.query_one("#mainPlot").plt.plot(self.get_wpm_points(), marker ="braille")
 
-    def on_mount(self):
+    def _update_labels(self):
         text1 = '\n'.join([f"WPM:{str(round(self.wpm))}",
-                    f"CPM:{str(round(self.cpm))}",
-                    f"Accuracy:{self.accuracy_info}"])
+            f"CPM:{str(round(self.cpm))}",
+            f"Accuracy:{self.accuracy_info}"])
         
         text2 = '\n'.join([f"Words:{self.wordCount}",
-                        f"Difficulty:{self.difficulty}"])
-        
+                        f"Difficulty:{self.difficulty.name}"])
 
 
-        self.mistakesContainer.border_title = f"Write something cool here"
-        self.mistakesContainer.styles.border_title_align = "center"
-        self.mistakesContainer.styles.border = ("heavy", "white")
+        self.query_one("#textLabel").update(f"{self.text}")
+        self.query_one("#infoLabelLeft").update(text1)
+        self.query_one("#infoLabelRight").update(text2)
 
-        self.infoLabelContainer.border_title = f"Info"
-        self.infoLabelContainer.border_subtitle = f"{self.time}"
-        self.infoLabelContainer.styles.border_title_align = "center"
-        self.infoLabelContainer.styles.border = ("heavy", "white")
+    def _stylize(self):
+        self.query_one("#mistakesContainer").border_title = f"Write something cool here"
+        self.query_one("#mistakesContainer").styles.border_title_align = "center"
+        self.query_one("#mistakesContainer").styles.border = ("heavy", "white")
 
-        self.textLabelContainer.border_title = f"Text"
-        self.textLabelContainer.styles.border_title_align = "center"
-        self.textLabelContainer.styles.border = ("heavy", "white")
+        self.query_one("#infoLabelContainer").border_title = f"Info"
+        self.query_one("#infoLabelContainer").border_subtitle = f"{self.time}"
+        self.query_one("#infoLabelContainer").styles.border_title_align = "center"
+        self.query_one("#infoLabelContainer").styles.border = ("heavy", "white")
 
-        self.textLabel.update(f"{self.text}")
-        self.infoLabelLeft.update(text1)
-        self.infoLabelRight.update(text2)
+        self.query_one("#textLabelContainer").border_title = f"Text"
+        self.query_one("#textLabelContainer").styles.border_title_align = "center"
+        self.query_one("#textLabelContainer").styles.border = ("heavy", "white")
 
-        plt = self.query_one(PlotextPlot).plt
-        plt.plot(self.get_wpm_points(), marker ="braille")
+    def on_mount(self):
+        self._stylize()
+        self._update_labels()
+        self._render_plot()
 
+        self.footer = Footer()
+        self.mount(self.footer)
 
-
-class TestApp(App):
-    
-    SCREENS={"Results" : ResultsScreen}
-
-    BINDINGS = [("ctrl+f", "new_screen", "open new screen")]
-    def compose(self):
-        yield Static("asd")
-
-    
-    def action_new_screen(self):
-        self.push_screen('Results')
-
-
-TestApp().run()
+    def action_close_screen(self):
+        self.app.pop_screen()

@@ -7,6 +7,8 @@ from widgets.AttemptSidebar import AttemptSidebar
 from widgets.StaticKeyboardInput import StaticKeyboardInput
 from widgets.KeypressDisplay import KeypressDisplay
 
+from ResultsScreen import ResultsScreen
+
 
 from textual import log
 
@@ -57,15 +59,18 @@ class MyApp(App):
 
     attemptSidebar = AttemptSidebar(id='attemptSidebarCollapsible', title='Previous Attempts')
 
-    # keypressDisplay = KeypressDisplay(id="keypressDisplay")
-    # keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
+    keypressDisplay = KeypressDisplay(id="keypressDisplay")
+    keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
+
+
+    resultsScreen = ResultsScreen()
 
     def compose(self):
         yield self.welcomeLabel
         yield self.labels
         yield self.keyboardInputContainer
         yield self.attemptSidebar
-        # yield self.keypressDisplayContainer
+        yield self.keypressDisplayContainer
         yield Footer()
 
     def on_mount(self):
@@ -118,12 +123,22 @@ class MyApp(App):
         self.generate_new_text()
         self.keyboardInput.update_text(self.textToType, self.difficulty)
 
+    def activate_screen(self, message: TypingCompleted):
+        self.resultsScreen.update(message)
+        self.push_screen(self.resultsScreen)
+
+
+    def action_attempt_clicked(self):
+        log("clicked")
+
     async def on_typing_completed(self, message: TypingCompleted):
         self.query_one('#wpmLabel').update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
-        self.attemptSidebar.add_entry(f"{message.wpm:.0f} WPM", message.generate_tooltip())
+        self.attemptSidebar.add_entry(f"{message.wpm:.0f} WPM", message)
 
-    # async def on_key_pressed(self, message: KeyPressed):
-    #     key = message.key.lower()
-    #     self.keypressDisplay.highlight_key(key)
+        self.activate_screen(message)
+
+    async def on_key_pressed(self, message: KeyPressed):
+        key = message.key.lower()
+        self.keypressDisplay.highlight_key(key)
 
 MyApp().run()

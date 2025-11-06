@@ -174,7 +174,7 @@ class StaticKeyboardInput(Static):
 
     def _check_start_stop(self):
         if(self.cursor_pos > 1 and self.cursor_pos-1 < len(self.placeholder)):
-            self.timepoints.append(round(time.time() - self.time_start, 5))
+            self.timepoints.append(round(time.time() - self.time_start, 3))
             # log(f"word=\"{self.text}\"\ndata={self.timepoints}")
         if(self.cursor_pos == 1):
             self.time_start = time.time()
@@ -190,5 +190,5 @@ class StaticKeyboardInput(Static):
 
             accuraacy_info = f"{len(self.mismatches)}/{len(self.text)}/{round(self._calculate_accuracy()*100)}%"
 
-            self.post_message(TypingCompleted(wpm, cpm, self.text, self.difficulty, self.wordCount, accuraacy_info))
+            self.post_message(TypingCompleted(wpm, cpm, self.placeholder, self.difficulty, self.wordCount, accuraacy_info, self.timepoints))
             self.reset_text()

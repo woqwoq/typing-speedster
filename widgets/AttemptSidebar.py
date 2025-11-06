@@ -12,15 +12,13 @@ POSTFIX_LENGTH = 3
 
 class AttemptSidebar(Widget):
 
-    BINDINGS =[
-        ('ctrl+f', 'add_entry', 'Add Entry'),
-    ]
 
     def __init__(self,title: str, **kwargs):
         super().__init__(**kwargs)
         self.title = title
         self.collapsibleGroup = Collapsible(id="attemptSidebarCollapsible", title=self.title, collapsed=False)
         self.entries = []
+        self.attemptInfo = []
         self.entry_count = 0
         self.querry_counter = 0
 
@@ -30,7 +28,6 @@ class AttemptSidebar(Widget):
 
     def on_mount(self):
         self.terminal_size = self.app.size
-
 
     def shorten_tooltip_length(self, tooltip):
         max_allowed_width = round(self.app.size.width*(CSS_TOOLTIP_MAX_WIDTH)/100)-POSTFIX_LENGTH
@@ -42,12 +39,14 @@ class AttemptSidebar(Widget):
 
     #TODO: If the tooltip text doesn't fit on the screen, cut it off with dots like "hello wo..." and add a clickable prev attempt opener
     #TODO: Or make put it inside the scrollable container
-    def add_entry(self, mainText: str, tooltip: list[str]):
-        current_entry = Static(f"[@click=null]{self.entry_count+1}. {mainText}[/]", id=f"entry_{self.entry_count}", classes="attemptEntry")
-
+    def add_entry(self, mainText: str, message: TypingCompleted):
+        current_entry = Static(f"[@click='app.attempt_clicked']{self.entry_count+1}. {mainText}[/]", id=f"entry_{self.entry_count}", classes="attemptEntry")
+        
+        tooltip = message.generate_tooltip()
         #Shorten the tooltip if needed
         tooltip = self.shorten_tooltip_length(tooltip)
         current_entry.tooltip = '\n'.join(tooltip)
+
         # log(f"Terminal Height: {self.terminal_size.height}")
 
         usable_terminal_height = self.terminal_size.height - UNUSABLE_HEIGHT
@@ -61,6 +60,7 @@ class AttemptSidebar(Widget):
             # log(f"valid_index: {valid_index}")
 
             self.entries[valid_index] = current_entry
+            self.attemptInfo[valid_index] = message
             self.entry_count += 1
 
             # log(f"#entry_{self.querry_counter}")
@@ -68,8 +68,6 @@ class AttemptSidebar(Widget):
             self.querry_counter += 1
         else:
             self.entries.append(current_entry)
+            self.attemptInfo.append(message)
             self.entry_count += 1
             self.collapsibleGroup.query_one('#mainLabel').mount(current_entry)
-
-    def action_add_entry(self):
-        self.add_entry(f"entry_{self.entry_count}", [""])
