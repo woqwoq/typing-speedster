@@ -3,10 +3,10 @@ from textual.events import Key
 from rich.text import Text
 from rich.style import Style
 
-from Difficulty import Difficulty
+from core.Difficulty import Difficulty
 from messages.TypingComplete import TypingCompleted
 from messages.KeyPressed import KeyPressed
-from Utils import remove_if_greater
+from core.Utils import remove_if_greater
 
 import time
 

@@ -7,16 +7,16 @@ from widgets.AttemptSidebar import AttemptSidebar
 from widgets.StaticKeyboardInput import StaticKeyboardInput
 from widgets.KeypressDisplay import KeypressDisplay
 
-from ResultsScreen import ResultsScreen
+from screens.ResultsScreen import ResultsScreen
 
 
 from textual import log
 
 from messages.TypingComplete import TypingCompleted
 from messages.KeyPressed import KeyPressed
-from Difficulty import Difficulty, order, world_len_ranges
+from core.Difficulty import Difficulty, order, world_len_ranges
 
-from TextGenerator import TextGenerator
+from core.TextGenerator import TextGenerator
 
 
 UNALLOWED_CHARS = {',', '.', "'", "-"}
@@ -25,7 +25,7 @@ DEFAULT_DIFFICULTY = Difficulty.EASY
 DEFUALT_WORD_COUNT = 5
 DEFAULT_CSS_PATH = "styles/App.css"
 DEFAULT_TEXT_GENERATOR_SEED = 123
-DEFUALT_WORD_DICTIONARY_PATH = "The_Oxford_3000.txt"
+DEFUALT_WORD_DICTIONARY_PATH = "dicts/The_Oxford_3000.txt"
 
 class MyApp(App):
 
@@ -59,18 +59,18 @@ class MyApp(App):
 
     attemptSidebar = AttemptSidebar(id='attemptSidebarCollapsible', title='Previous Attempts')
 
-    keypressDisplay = KeypressDisplay(id="keypressDisplay")
-    keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
+    # keypressDisplay = KeypressDisplay(id="keypressDisplay")
+    # keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
 
 
-    resultsScreen = ResultsScreen()
+    resultsScreen = None
 
     def compose(self):
         yield self.welcomeLabel
         yield self.labels
         yield self.keyboardInputContainer
         yield self.attemptSidebar
-        yield self.keypressDisplayContainer
+        # yield self.keypressDisplayContainer
         yield Footer()
 
     def on_mount(self):
@@ -124,7 +124,7 @@ class MyApp(App):
         self.keyboardInput.update_text(self.textToType, self.difficulty)
 
     def activate_screen(self, message: TypingCompleted):
-        self.resultsScreen.update(message)
+        self.resultsScreen = ResultsScreen(message)
         self.push_screen(self.resultsScreen)
 
 
@@ -137,8 +137,8 @@ class MyApp(App):
 
         self.activate_screen(message)
 
-    async def on_key_pressed(self, message: KeyPressed):
-        key = message.key.lower()
-        self.keypressDisplay.highlight_key(key)
+    # async def on_key_pressed(self, message: KeyPressed):
+    #     key = message.key.lower()
+    #     self.keypressDisplay.highlight_key(key)
 
 MyApp().run()

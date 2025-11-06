@@ -15,12 +15,13 @@ def _calculate_raw_wpm(text, time):
 class ResultsScreen(Screen):
 
     BINDINGS = [("ctrl+z", "close_screen", "Close")]
-    CSS_PATH='styles/ResultsScreen.css'
+    CSS_PATH='../styles/ResultsScreen.css'
 
-    def __init__(self, **kwargs):
+    def __init__(self, message: TypingCompleted, **kwargs):
         super().__init__(**kwargs)
+        self._update(message)
 
-    def update(self, message: TypingCompleted):
+    def _update(self, message: TypingCompleted):
         self.wpm = message.wpm
         self.cpm = message.cpm
         self.accuracy_info = message.accuracy_info

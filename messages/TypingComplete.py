@@ -1,4 +1,4 @@
-from Difficulty import Difficulty
+from core.Difficulty import Difficulty
 from textual.message import Message
 import time
 
