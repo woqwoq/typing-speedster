@@ -1,3 +1,6 @@
+## Demo
+![](https://github.com/woqwoq/typing-speedster/blob/main/demo/Public_Release_Demo_1.gif)
+
 ## TODO
 ### **Fixes** 
 - Fix the WPM calculation formula tweakery
