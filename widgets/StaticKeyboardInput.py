@@ -38,6 +38,7 @@ DIM_TEXT_STYLE = Style(color="white", dim=True)
 UNMATCH_TEXT_STYLE = Style(color="white", bgcolor="red")
 
 
+#TODO: Encapsulate keyboard input from high-level typing-test functionality
 class StaticKeyboardInput(Static):
     can_focus = True
 

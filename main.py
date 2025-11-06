@@ -1,21 +1,19 @@
+from textual import log
+
 from textual.app import App
-from textual.screen import Screen
-from textual.containers import Container, ScrollableContainer
 from textual.widgets import Label, Footer
+from textual.containers import Container, ScrollableContainer
 
 from widgets.AttemptSidebar import AttemptSidebar
-from widgets.StaticKeyboardInput import StaticKeyboardInput
 from widgets.KeypressDisplay import KeypressDisplay
+from widgets.StaticKeyboardInput import StaticKeyboardInput
 
 from screens.ResultsScreen import ResultsScreen
 
-
-from textual import log
-
 from messages.TypingComplete import TypingCompleted
 from messages.KeyPressed import KeyPressed
-from core.Difficulty import Difficulty, order, world_len_ranges
 
+from core.Difficulty import Difficulty, order, world_len_ranges
 from core.TextGenerator import TextGenerator
 
 
@@ -62,7 +60,6 @@ class MyApp(App):
     # keypressDisplay = KeypressDisplay(id="keypressDisplay")
     # keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
 
-
     resultsScreen = None
 
     def compose(self):
@@ -101,7 +98,6 @@ class MyApp(App):
     def update_maxWordLen(self):
         self.maxWordLen = self.get_range_from_difficulty()
 
-
     def action_increase_difficulty(self):
         new_difficulty_index = self.difficulty.value+1
         if(new_difficulty_index < len(order)):
@@ -126,7 +122,6 @@ class MyApp(App):
     def activate_screen(self, message: TypingCompleted):
         self.resultsScreen = ResultsScreen(message)
         self.push_screen(self.resultsScreen)
-
 
     def action_attempt_clicked(self):
         log("clicked")

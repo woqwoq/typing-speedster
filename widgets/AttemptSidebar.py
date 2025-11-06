@@ -1,8 +1,6 @@
-from textual.app import App
-from textual.widgets import Button, Label, Footer, Static, Collapsible, DataTable
-from textual.widget import Widget
-from textual.containers import Container
 from textual import log
+from textual.widget import Widget
+from textual.widgets import Static, Collapsible
 
 from messages.AttemptEntryClicked import AttemptEntryClicked
 
@@ -10,6 +8,7 @@ from screens.ResultsScreen import ResultsScreen
 
 from widgets.AttemptEntry import AttemptEntry
 from widgets.StaticKeyboardInput import TypingCompleted
+
 
 UNUSABLE_HEIGHT = 4
 CSS_TOOLTIP_MAX_WIDTH = 60
@@ -40,7 +39,6 @@ class AttemptSidebar(Widget):
 
         return tooltip
 
-    
     async def on_attempt_entry_clicked(self, message: AttemptEntryClicked):
         self.app.push_screen(ResultsScreen(self.attemptInfo[message.position_index]))
 
@@ -58,6 +56,7 @@ class AttemptSidebar(Widget):
         if(usable_terminal_height < self.entry_count+1):
             valid_index = self.entry_count%usable_terminal_height
             current_entry.set_position_index(valid_index)
+
             self.entries[valid_index] = current_entry
             self.attemptInfo[valid_index] = message
             self.entry_count += 1
@@ -66,7 +65,9 @@ class AttemptSidebar(Widget):
             self.querry_counter += 1
         else:
             current_entry.set_position_index(self.entry_count)
+
             self.entries.append(current_entry)
             self.attemptInfo.append(message)
             self.entry_count += 1
+
             self.collapsibleGroup.query_one('#mainLabel').mount(current_entry)
