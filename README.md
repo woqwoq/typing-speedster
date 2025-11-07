@@ -8,6 +8,7 @@
 - Fix cursor not displaying on newline char
 - Fix keyboard input moving after the first results
 - Fix perforamnce issues with `KeypressDisplay`
+- Fix accepting a completely unmatching text
 
 ### **Best Practices** 
 - Move border styling from python to css
