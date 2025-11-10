@@ -20,7 +20,7 @@
 ### **Features** 
 - Replace unmatched char to what it should be
 - Add hit-ratio influence for the formulas
-- Add different modes
+- Add different modes x
 - Add themes
 - Add custom text
 - Add stats
