@@ -41,4 +41,5 @@
 └── widgets         - GUI widgets and components (e.g., input fields, keypress displays)
 ```
 ## Notes
-- Before usage, make sure to add some sort of dictionary in `/dicts/` and change the config in `main.py` (later will be handled with a dynamic config)
+- Before usage, make sure to add some sort of dictionary in `/dicts/` and change the config in `main.py` (later will be handled with a dynamic config).
+- Oxford 3000 Dictionary is available at `https://github.com/sapbmw/The-Oxford-3000`
