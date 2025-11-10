@@ -29,7 +29,9 @@ SPECIAL_CHARACTER_MAP ={"number_sign"           : "#",
                         "tab"                   : "\t",
                         "minus"                 : "-",
                         "plus"                  : "+",
-                        "equals_sign"           : "=",}
+                        "equals_sign"           : "=",
+                        "comma"                 : ",",
+                        "question_mark"         : "?"}
 
 
 TEXT_STYLE = Style(color="white")

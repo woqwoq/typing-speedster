@@ -17,4 +17,4 @@ world_len_ranges = {
     4: [8, 20]
 }
 
-order = [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD, Difficulty.VERY_HARD, Difficulty.SELF_HARM]
+difficulty_order = [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD, Difficulty.VERY_HARD, Difficulty.SELF_HARM]
