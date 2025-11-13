@@ -47,11 +47,24 @@ class TextGenerator():
         return text
     
     def generate_lyrics(self, amount: int):
-        lyrics_lines = open(self.lyrics_source_path).readlines()
+        lyrics_lines = open(self.lyrics_source_path, 'r').readlines()
         start = random.randint(0, len(lyrics_lines)-amount-1)
         end = start+amount
 
         return ''.join(lyrics_lines[start:end])
+    
+    def generate_code_fragment(self, number: int):
+        code_lines = open(self.code_source_path, 'r').readlines()
+        code_lines = ''.join(code_lines).replace('    ', '\t').split('---')
+
+        res_lines = []
+        for i in range(len(code_lines)):
+            code_lines[i] = code_lines[i].strip('\n')
+            if(code_lines[i] != ''):
+                res_lines.append(code_lines[i])
+
+        return res_lines[number%len(res_lines)]
+
 
 
 
@@ -63,5 +76,7 @@ class TextGenerator():
                 return self.generate_lyrics(amount)
             # case Mode.QUOTE:
             #     self.generate_quote(amount)
-            # case Mode.CODE:
-            #     self.generate_code(amount)
+            case Mode.CODE:
+                return self.generate_code_fragment(amount)
+            case _:
+                return self.generate_text(amount, allowedLen)
