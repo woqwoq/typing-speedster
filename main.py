@@ -17,6 +17,9 @@ from core.Difficulty import Difficulty, world_len_ranges, difficulty_order
 from core.TextGenerator import TextGenerator
 from core.Mode import Mode, mode_order
 
+from textual.app import App, SystemCommand
+from textual.screen import Screen
+
 
 UNALLOWED_CHARS = {',', '.', "'", "-"}
 
@@ -55,9 +58,9 @@ class MyApp(App):
     maxWordLen = world_len_ranges[difficulty.value]
 
 
-    # textToType = textGenerator.get_text(mode, wordCount, maxWordLen)
+    textToType = textGenerator.get_text(mode, wordCount, maxWordLen)
     # textToType = "hello\nworld\nhi\nworld\na\ns\nhi\nworld\na\ns"
-    textToType = "for (int i = 0; i < arr.length; i++) {}"
+    # textToType = "for (int i = 0; i < arr.length; i++) {}"
     # textToType = """class TabExampleApp(App):\n\tdef compose(self) -> ComposeResult:\n\t\tyield TextArea(id="editor")\n\t\tyield Input(placeholder="Type here...")"""
 
     welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
@@ -110,6 +113,17 @@ class MyApp(App):
 
         self.generate_new_text()
         self.keyboardInput.update_text(self.textToType, self.difficulty)
+
+    def get_system_commands(self, screen: Screen):
+        yield from super().get_system_commands(screen)
+        yield SystemCommand("Restart Test", "Restart the test with a new text", self.action_restart)
+        yield SystemCommand("Reset Test", "Reset the test keeping same text", self.action_reset_text)
+        yield SystemCommand("Switch Mode", f"Mode ordering is {[mode.name for mode in mode_order]}", self.action_next_mode)
+        yield SystemCommand("Increase Word Count", "", self.action_increase_words)
+        yield SystemCommand("Decrease Word Count", "", self.action_decrease_words)
+        yield SystemCommand("Increase Difficulty", "", self.action_increase_difficulty)
+        yield SystemCommand("Decrease Difficulty", "", self.action_decrease_difficulty)
+
 
     #ACTIONS
     def action_increase_words(self):

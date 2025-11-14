@@ -31,7 +31,9 @@ SPECIAL_CHARACTER_MAP ={"number_sign"           : "#",
                         "plus"                  : "+",
                         "equals_sign"           : "=",
                         "comma"                 : ",",
-                        "question_mark"         : "?"}
+                        "question_mark"         : "?",
+                        "dollar_sign"           : "$",
+                        "slash"                 : "/"}
 
 
 TEXT_STYLE = Style(color="white")

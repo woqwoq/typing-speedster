@@ -16,6 +16,7 @@
 - Add dynamic config
 - Add scroallable container to attempt entry's tooltip
 - Cleanup `ResultsScreen`
+- Change `Code.txt` and `Lyrics.txt` to JSON
 
 ### **Features** 
 - Replace unmatched char to what it should be
@@ -25,6 +26,7 @@
 - Add custom text
 - Add stats
 - Add json database for attempts/stats
+- Add command palette for the custom text
 
 ## Project structure
 ```

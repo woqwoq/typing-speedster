@@ -1,11 +1,9 @@
-code_lines = open("dicts/Code.txt", 'r').readlines()
-code_lines = ''.join(code_lines).replace('    ', '\t').split('---')
+import json
 
-res_lines = []
-for i in range(len(code_lines)):
-    code_lines[i] = code_lines[i].strip('\n')
-    if(code_lines[i] != ''):
-        res_lines.append(code_lines[i])
+code_file = open('dicts/Code.txt.concept', 'r')
 
+json_text = json.load(code_file)
 
-print(res_lines)
+json_text.append({'entry_number' : '3', 'entry_text' : 'asf\nff'}) 
+
+print(json_text)
