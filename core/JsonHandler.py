@@ -89,113 +89,113 @@ class JsonHandler:
 # SCHEMA = ['song_name', 'lyrics']
 # SCHEMA_PREPROCESS = [0, 1]
 
-# message = """Look, if you had one shot or one opportunity
-# To seize everything you ever wanted in one moment
-# Would you capture it or just let it slip?
-# Yo
+# message = """[Intro: Eminem]
+# (Yo, left, yo, left) 'Cause sometimes you just feel tired
+# (Yo, left, right, left) Feel weak, and when you feel weak
+# (Yo, left, yo, left) You feel like you wanna just give up
+# (Yo, left, right, left) But you gotta search within you
+# (Yo, left, yo, left) Try to find that inner strength and just pull that shit out of you
+# (Yo, left, right, left) And get that motivation to not give up
+# (Yo, left, yo, left) And not be a quitter
+# (Yo, left, right, left) No matter how bad you wanna just fall flat on your face and collapse
 
-# [Verse 1]
-# His palms are sweaty, knees weak, arms are heavy
-# There's vomit on his sweater already, mom's spaghetti
-# He's nervous, but on the surface, he looks calm and ready
-# To drop bombs, but he keeps on forgetting
-# What he wrote down, the whole crowd goes so loud
-# He opens his mouth, but the words won't come out
-# He's chokin', how? Everybody's jokin' now
-# The clock's run out, time's up, over, blaow
-# Snap back to reality, ope, there goes gravity
-# Ope, there goes Rabbit, he choked, he's so mad
-# But he won't give up that easy, no, he won't have it
-# He knows his whole back's to these ropes, it don't matter
-# He's dope, he knows that, but he's broke, he's so stagnant
-# He knows when he goes back to this mobile home, that's when it's
-# Back to the lab again, yo, this old rhapsody
-# Better go capture this moment and hope it don't pass him
-
-# [Chorus]
-# You better lose yourself in the music
-# The moment, you own it, you better never let it go (Go)
-# You only get one shot, do not miss your chance to blow
-# This opportunity comes once in a lifetime, yo
-# You better lose yourself in the music
-# The moment, you own it, you better never let it go (Go)
-# You only get one shot, do not miss your chance to blow
-# This opportunity comes once in a lifetime, yo
-# You better
+# [Verse 1: Eminem]
+# 'Til I collapse, I'm spillin' these raps long as you feel 'em
+# 'Til the day that I drop, you'll never say that I'm not killin' 'em
+# 'Cause when I am not, then I'ma stop pennin' 'em
+# And I am not hip-hop and I'm just not Eminem
+# Subliminal thoughts, when I'ma stop sendin' 'em?
+# Women are caught in webs, spin 'em and hock venom
+# Adrenaline shots of penicillin could not get the illin' to stop
+# Amoxicillin's just not real enough
+# The criminal, cop-killin', hip-hop villain
+# A minimal swap to cop millions of Pac listeners
+# You're comin' with me, feel it or not
+# You're gonna fear it like I showed ya the spirit of God lives in us
+# You hear it a lot, lyrics to shock
+# Is it a miracle or am I just product of pop fizzin' up?
+# Fa' shizzle, my wizzle, this is the plot, listen up
+# You bizzles forgot, Slizzle does not give a fuck
 # See upcoming rap shows
 # Get tickets for your favorite artists
 # You might also like
+# Lose Yourself
+# Eminem
 # Family Matters
 # Drake
-# Die With A Smile
-# Lady Gaga & Bruno Mars
-# ROSÉ & Bruno Mars - APT. (Romanized)
-# Genius Romanizations
-# [Verse 2]
-# His soul's escaping through this hole that is gaping
-# This world is mine for the taking, make me king
-# As we move toward a new world order
-# A normal life is boring, but superstardom's
-# Close to post-mortem, it only grows harder
-# Homie grows hotter, he blows, it's all over
-# These hoes is all on him, coast-to-coast shows
-# He's known as the Globetrotter, lonely roads
-# God only knows he's grown farther from home, he's no father
-# He goes home and barely knows his own daughter
-# But hold your nose 'cause here goes the cold water
-# These hoes don't want him no mo', he's cold product
-# They moved on to the next schmoe who flows
-# He nose-dove and sold nada, and so the soap opera
-# Is told, it unfolds, I suppose it's old, partner
-# But the beat goes on, da-da-dom, da-dom, dah-dah-dah-dah
+# HISS
+# Megan Thee Stallion
+# [Chorus: Nate Dogg & Eminem]
+# 'Til the roof comes off, 'til the lights go out
+# 'Til my legs give out, can't shut my mouth
+# 'Til the smoke clears out, am I high? Perhaps
+# I'ma rip this shit 'til my bones collapse
+# 'Til the roof comes off, 'til the lights go out ('Til the roof, until the roof)
+# 'Til my legs give out, can't shut my mouth (The roof comes off, the roof comes off)
+# 'Til the smoke clears out, am I high? Perhaps ('Til my legs, until my legs)
+# I'ma rip this shit 'til my bones collapse (Give out from underneath me)
 
-# [Chorus]
-# You better lose yourself in the music
-# The moment, you own it, you better never let it go (Go)
-# You only get one shot, do not miss your chance to blow
-# This opportunity comes once in a lifetime, yo
-# You better lose yourself in the music
-# The moment, you own it, you better never let it go (Go)
-# You only get one shot, do not miss your chance to blow
-# This opportunity comes once in a lifetime, yo
-# You better
-# [Verse 3]
-# No more games, I'ma change what you call rage
-# Tear this motherfuckin' roof off like two dogs caged
-# I was playin' in the beginning, the mood all changed
-# I've been chewed up and spit out and booed off stage
-# But I kept rhymin' and stepped right in the next cypher
-# Best believe somebody's payin' the Pied Piper
-# All the pain inside amplified by the
-# Fact that I can't get by with my nine-to-
-# Five and I can't provide the right type of life for my family
-# 'Cause, man, these goddamn food stamps don't buy diapers
-# And there's no movie, there's no Mekhi Phifer, this is my life
-# And these times are so hard, and it's gettin' even harder
-# Tryna feed and water my seed, plus teeter-totter
-# Caught up between bein' a father and a prima donna
-# Baby-mama drama, screamin' on her, too much for me to wanna
-# Stay in one spot, another day of monotony's gotten me
-# To the point I'm like a snail, I've got
-# To formulate a plot or end up in jail or shot
-# Success is my only motherfuckin' option, failure's not
-# Mom, I love you, but this trailer's got
-# To go, I cannot grow old in Salem's Lot
-# So here I go, it's my shot, feet, fail me not
-# This may be the only opportunity that I got
+# [Verse 2: Eminem]
+# Music is like magic, there's a certain feelin' you get
+# When you real and you spit, and people are feelin' your shit
+# This is your moment, and every single minute you spend
+# Tryna hold on to it, 'cause you may never get it again
+# So while you're in it, try to get as much shit as you can
+# And when your run is over, just admit when it's at its end
+# 'Cause I'm at the end of my wits with half the shit that gets in
+# I got a list, here's the order of my list that it's in
+# It goes: Reggie, JAY-Z, 2Pac and Biggie
+# André from OutKast, Jada, Kurupt, Nas, and then me
+# But in this industry I'm the cause of a lot of envy
+# So when I'm not put on this list, this shit does not offend me
+# That's why you see me walk around like nothing's botherin' me
+# Even though half you people got a fuckin' problem with me
+# You hate it, but you know respect you got to give me
+# The press's wet dream, like Bobby and Whitney—Nate, hit me
+# [Chorus: Nate Dogg & Eminem]
+# 'Til the roof comes off, 'til the lights go out
+# 'Til my legs give out, can't shut my mouth
+# 'Til the smoke clears out, am I high? Perhaps
+# I'ma rip this shit 'til my bones collapse
+# 'Til the roof comes off, 'til the lights go out ('Til the roof, until the roof)
+# 'Til my legs give out, can't shut my mouth (The roof comes off, the roof comes off)
+# 'Til the smoke clears out, am I high? Perhaps ('Til my legs, until my legs)
+# I'ma rip this shit 'til my bones collapse (Give out from underneath me)
 
-# [Chorus]
-# You better lose yourself in the music
-# The moment, you own it, you better never let it go (Go)
-# You only get one shot, do not miss your chance to blow
-# This opportunity comes once in a lifetime, yo
-# You better lose yourself in the music
-# The moment, you own it, you better never let it go (Go)
-# You only get one shot, do not miss your chance to blow
-# This opportunity comes once in a lifetime, yo
-# You better
-# [Outro]
-# You can do anything you set your mind to, man"""
+# [Verse 3: Eminem]
+# Soon as a verse starts, I eat at an MC's heart
+# What is he thinking? How not to go against me, smart
+# And it's absurd how people hang on every word
+# I'll prob'ly never get the props I feel I ever deserve
+# But I'll never be served, my spot is forever reserved
+# If I ever leave Earth, that would be the death of me first
+# 'Cause in my heart of hearts I know nothin' could ever be worse
+# That's why I'm clever when I put together every verse
+# My thoughts are sporadic, I act like I'm an addict
+# I rap like I'm addicted to smack like I'm Kim Mathers
+# But I don't wanna go forth and back in constant battles
+# The fact is I would rather sit back and bomb some rappers
+# So this is like a full-blown attack I'm launchin' at 'em
+# The track is on some battlin' raps, who wants some static?
+# 'Cause I don't really think that the fact that I'm Slim matters
+# A plaque and platinum status is wack if I'm not the baddest, so
+# [Chorus: Nate Dogg & Eminem]
+# 'Til the roof comes off, 'til the lights go out
+# 'Til my legs give out, can't shut my mouth
+# 'Til the smoke clears out, am I high? Perhaps
+# I'ma rip this shit 'til my bones collapse
+# 'Til the roof comes off, 'til the lights go out ('Til the roof, until the roof)
+# 'Til my legs give out, can't shut my mouth (The roof comes off, the roof comes off)
+# 'Til the smoke clears out, am I high? Perhaps ('Til my legs, until my legs)
+# I'ma rip this shit 'til my bones collapse (Give out from underneath me)
+
+# [Outro: Eminem, Nate Dogg & Eminem & Nate Dogg]
+# Until the roof, until the roof
+# The roof comes off, the roof comes off
+# Until my legs, until my legs
+# Give out from underneath me, I
+# I will not fall, I will stand tall
+# Feels like no one can beat me"""
 # handler = JsonHandler('dicts/Lyrics.txt', SCHEMA, SCHEMA_PREPROCESS)
 
-# handler.add_json_entry(['Eminem - Lose Yourself', message], True)
+# handler.add_json_entry(['Eminem - \'Till I Collapse', message], True)

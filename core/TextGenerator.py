@@ -19,6 +19,8 @@ class TextGenerator():
         self.quote_source_path = quote_source_path
         self.code_source_path = code_source_path
 
+        self.recent_description = None
+
         self.words = self._get_unique_words_from_file()
         self.word_count = len(self.words)
         self.unallowed_chars = unallowed_chars
@@ -56,19 +58,23 @@ class TextGenerator():
     
     def generate_lyrics(self, song_number: int, allowedLen: list):
         handler = JsonHandler(self.lyrics_source_path, JSON_LYRICS_SCHEMA, JSON_LYRICS_SCHEMA_PREPROCESS)
-        lyrics_lines = handler.get_entry(song_number%handler.size())['lyrics']
+        entry = handler.get_entry(song_number%handler.size())
+        lyrics_lines = entry[JSON_LYRICS_SCHEMA[1]]
 
         line_count = random.randint(allowedLen[0], allowedLen[1])
 
         start = random.randint(0, len(lyrics_lines)-line_count-1)
         end = start+line_count
 
+        self.recent_description = entry[JSON_LYRICS_SCHEMA[0]]
         return ''.join(lyrics_lines[start:end])
     
     def generate_code_fragment(self, number: int):
         handler = JsonHandler(self.code_source_path, JSON_CODE_SCHEMA, JSON_CODE_SCHEMA_PREPROCESS)
-
-        return ''.join(handler.get_entry(number%handler.size())['entry_text'])
+        entry = handler.get_entry(number%handler.size())
+        
+        self.recent_description = entry[JSON_CODE_SCHEMA[0]]
+        return ''.join(entry[JSON_CODE_SCHEMA[1]])
 
     def get_text(self, mode: Mode, amount: int, allowedLen: list):
         match mode:

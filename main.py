@@ -1,8 +1,11 @@
-from textual import log
-
-from textual.app import App
+from textual.app import App, SystemCommand
 from textual.widgets import Label, Footer
 from textual.containers import Container, ScrollableContainer
+from textual.screen import Screen
+
+from core.Difficulty import Difficulty, world_len_ranges, difficulty_order
+from core.Mode import Mode, mode_order
+from core.TextGenerator import TextGenerator
 
 from widgets.AttemptSidebar import AttemptSidebar
 from widgets.KeypressDisplay import KeypressDisplay
@@ -11,73 +14,84 @@ from widgets.StaticKeyboardInput import StaticKeyboardInput
 from screens.ResultsScreen import ResultsScreen
 
 from messages.TypingComplete import TypingCompleted
-from messages.KeyPressed import KeyPressed
-
-from core.Difficulty import Difficulty, world_len_ranges, difficulty_order
-from core.TextGenerator import TextGenerator
-from core.Mode import Mode, mode_order
-
-from textual.app import App, SystemCommand
-from textual.screen import Screen
 
 
-UNALLOWED_CHARS = {',', '.', "'", "-"}
+# ============================================================
+# CONSTANTS & CONFIG
+# ============================================================
+UNALLOWED_CHARS = {",", ".", "'", "-"}
 
 DEFAULT_MODE = Mode.TEXT
 DEFAULT_DIFFICULTY = Difficulty.EASY
-DEFUALT_WORD_COUNT = 5
+DEFAULT_WORD_COUNT = 5
+DEFAULT_MAX_WORD_LENGTH = world_len_ranges[DEFAULT_DIFFICULTY.value]
+
 DEFAULT_CSS_PATH = "styles/App.css"
-DEFAULT_TEXT_GENERATOR_SEED = 123
-DEFUALT_WORD_DICTIONARY_PATH = "dicts/The_Oxford_3000.txt"
-DEFAULT_LYRICS_DICTIONARY_PATH = "dicts/Lyrics.txt"
-DEFAULT_QUOTE_DICTIONARY_PATH = "dicts/Quotes.txt"
-DEFAULT_CODE_DICTIONARY_PATH = "dicts/Code.txt"
+DEFAULT_SEED = 123
 
+DEFAULT_DICT_WORDS = "dicts/The_Oxford_3000.txt"
+DEFAULT_DICT_LYRICS = "dicts/Lyrics.txt"
+DEFAULT_DICT_QUOTES = "dicts/Quotes.txt"
+DEFAULT_DICT_CODE = "dicts/Code.txt"
+
+
+# ============================================================
+# APPLICATION
+# ============================================================
 class MyApp(App):
-
-    BINDINGS =[
-        ('ctrl+d', 'increase_words', 'WORDS+'),
-        ('ctrl+a', 'decrease_words', 'WORDS-'),
-        ('ctrl+w', 'increase_difficulty', 'DIFFICULTY+'),
-        ('ctrl+s', 'decrease_difficulty', 'DIFFICULTY-'),
-        ('ctrl+z', 'restart', 'RESTART'),
-        ('ctrl+r', 'next_mode', 'MODE'),
-        ('ctrl+x', 'reset_text', 'RESET')
-    ]
 
     CSS_PATH = DEFAULT_CSS_PATH
 
+    BINDINGS = [
+        ("ctrl+d", "increase_words", "WORDS+"),
+        ("ctrl+a", "decrease_words", "WORDS-"),
+        ("ctrl+w", "increase_difficulty", "DIFFICULTY+"),
+        ("ctrl+s", "decrease_difficulty", "DIFFICULTY-"),
+        ("ctrl+z", "restart", "RESTART"),
+        ("ctrl+r", "next_mode", "MODE"),
+        ("ctrl+x", "reset_text", "RESET"),
+    ]
+
+    # --------------------------------------------------------
+    # INITIAL STATE
+    # --------------------------------------------------------
     mode = DEFAULT_MODE
-
-    textGenerator = TextGenerator(DEFAULT_TEXT_GENERATOR_SEED, DEFUALT_WORD_DICTIONARY_PATH,
-                                   DEFAULT_LYRICS_DICTIONARY_PATH, DEFAULT_QUOTE_DICTIONARY_PATH, 
-                                   DEFAULT_CODE_DICTIONARY_PATH, UNALLOWED_CHARS)
-
     difficulty = DEFAULT_DIFFICULTY
-    wordCount = DEFUALT_WORD_COUNT
-    maxWordLen = world_len_ranges[difficulty.value]
+    wordCount = DEFAULT_WORD_COUNT
+    maxWordLen = DEFAULT_MAX_WORD_LENGTH
 
+    textGenerator = TextGenerator(
+        DEFAULT_SEED,
+        DEFAULT_DICT_WORDS,
+        DEFAULT_DICT_LYRICS,
+        DEFAULT_DICT_QUOTES,
+        DEFAULT_DICT_CODE,
+        UNALLOWED_CHARS,
+    )
 
     textToType = textGenerator.get_text(mode, wordCount, maxWordLen)
-    # textToType = "hello\nworld\nhi\nworld\na\ns\nhi\nworld\na\ns"
-    # textToType = "for (int i = 0; i < arr.length; i++) {}"
-    # textToType = """class TabExampleApp(App):\n\tdef compose(self) -> ComposeResult:\n\t\tyield TextArea(id="editor")\n\t\tyield Input(placeholder="Type here...")"""
 
-    welcomeLabel = Label(id='welcomeLabel', content="Typing-Speedster")
+    # --------------------------------------------------------
+    # UI COMPONENTS
+    # --------------------------------------------------------
+    welcomeLabel = Label(id="welcomeLabel", content="Typing-Speedster")
 
-    keyboardInput = StaticKeyboardInput(id='keyboardInput', placeholder=textToType)
+    keyboardInput = StaticKeyboardInput(id="keyboardInput", placeholder=textToType)
     keyboardInputContainer = ScrollableContainer(keyboardInput, id="keyboardInputContainer")
 
-    labels = Container( Label("15", id="timerLabel"), Label("", id="wpmLabel"), id="labelContainer")
+    labels = Container(
+        Label("15", id="timerLabel"),
+        Label("", id="wpmLabel"),
+        id="labelContainer",
+    )
 
-    attemptSidebar = AttemptSidebar(id='attemptSidebarCollapsible', title='Previous Attempts')
-
-    # keypressDisplay = KeypressDisplay(id="keypressDisplay")
-
-    # keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
+    attemptSidebar = AttemptSidebar(id="attemptSidebarCollapsible", title="Previous Attempts")
 
     resultsScreen = None
 
+    # ============================================================
+    # COMPOSITION
+    # ============================================================
     def compose(self):
         yield self.welcomeLabel
         yield self.labels
@@ -87,93 +101,87 @@ class MyApp(App):
         yield Footer()
 
     def on_mount(self):
-        self.keyboardInputContainer.border_title = f"{self.wordCount} Word Test"
-        self.keyboardInputContainer.border_subtitle = f"{self.mode.name} | {self.difficulty.name}"
+        self.update_labels()
         self.keyboardInputContainer.styles.border_title_align = "center"
         self.keyboardInputContainer.styles.border = ("heavy", "blue")
 
-    def generate_new_text(self):
+    # ============================================================
+    # HELPERS
+    # ============================================================
+    def refresh_text_and_ui(self):
         self.textToType = self.textGenerator.get_text(self.mode, self.wordCount, self.maxWordLen)
-
-    def get_range_from_difficulty(self):
-        return world_len_ranges[self.difficulty.value]
-    
-    def update_maxWordLen(self):
-        self.maxWordLen = self.get_range_from_difficulty()
-
-    def modify_difficulty(self, new_difficulty_index):
-        self.difficulty = difficulty_order[new_difficulty_index]
-        self.query_one('#keyboardInputContainer').border_subtitle = f"{self.mode.name} | {self.difficulty.name}"
-        self.update_maxWordLen()
-        self.generate_new_text()
+        self.update_labels()
         self.keyboardInput.update_text(self.textToType, self.difficulty)
 
-    def change_mode(self):
-        self.query_one('#keyboardInputContainer').border_subtitle = f"{self.mode.name} | {self.difficulty.name}"
+    def update_labels(self):
+        container = self.query_one("#keyboardInputContainer")
+        container.border_title = self._generate_label()
+        container.border_subtitle = f"{self.mode.name} | {self.difficulty.name}"
 
-        self.generate_new_text()
-        self.keyboardInput.update_text(self.textToType, self.difficulty)
+    def _generate_label(self):
+        if self.mode is Mode.TEXT:
+            return f"{self.wordCount} Word Test"
+        return self.textGenerator.recent_description
 
+    # ============================================================
+    # SYSTEM COMMANDS
+    # ============================================================
     def get_system_commands(self, screen: Screen):
         yield from super().get_system_commands(screen)
         yield SystemCommand("Restart Test", "Restart the test with a new text", self.action_restart)
         yield SystemCommand("Reset Test", "Reset the test keeping same text", self.action_reset_text)
-        yield SystemCommand("Switch Mode", f"Mode ordering is {[mode.name for mode in mode_order]}", self.action_next_mode)
+        yield SystemCommand("Switch Mode", f"Mode order: {[m.name for m in mode_order]}", self.action_next_mode)
         yield SystemCommand("Increase Word Count", "", self.action_increase_words)
         yield SystemCommand("Decrease Word Count", "", self.action_decrease_words)
         yield SystemCommand("Increase Difficulty", "", self.action_increase_difficulty)
         yield SystemCommand("Decrease Difficulty", "", self.action_decrease_difficulty)
 
-
-    #ACTIONS
+    # ============================================================
+    # ACTIONS
+    # ============================================================
     def action_increase_words(self):
-        self.wordCount+=1
-        self.query_one('#keyboardInputContainer').border_title = f"{self.wordCount} Word Test"
-        self.generate_new_text()
-        self.keyboardInput.update_text(self.textToType, self.difficulty)
+        self.wordCount += 1
+        self.refresh_text_and_ui()
 
     def action_decrease_words(self):
-        if(self.wordCount > 1):
-            self.wordCount-=1
-            self.query_one('#keyboardInputContainer').border_title = f"{self.wordCount} Word Test"
-            self.generate_new_text()
-            self.keyboardInput.update_text(self.textToType, self.difficulty)
+        if self.wordCount > 1:
+            self.wordCount -= 1
+            self.refresh_text_and_ui()
 
     def action_increase_difficulty(self):
-        new_difficulty_index = self.difficulty.value+1
-        if(new_difficulty_index < len(difficulty_order)):
-            self.modify_difficulty(new_difficulty_index)
+        new_index = self.difficulty.value + 1
+        if new_index < len(difficulty_order):
+            self.difficulty = difficulty_order[new_index]
+            self.maxWordLen = world_len_ranges[new_index]
+            self.refresh_text_and_ui()
 
     def action_decrease_difficulty(self):
-        new_difficulty_index = self.difficulty.value-1
-        if(new_difficulty_index >= 0):
-            self.modify_difficulty(new_difficulty_index)
+        new_index = self.difficulty.value - 1
+        if new_index >= 0:
+            self.difficulty = difficulty_order[new_index]
+            self.maxWordLen = world_len_ranges[new_index]
+            self.refresh_text_and_ui()
 
     def action_restart(self):
-        self.generate_new_text()
-        self.keyboardInput.update_text(self.textToType, self.difficulty)
-
-    def activate_screen(self, message: TypingCompleted):
-        self.resultsScreen = ResultsScreen(message)
-        self.push_screen(self.resultsScreen)
+        self.refresh_text_and_ui()
 
     def action_next_mode(self):
-        new_mode_index = (self.mode.value+1)%len(mode_order)
-        self.mode = mode_order[new_mode_index]
-        
-        self.change_mode()
+        new_index = (self.mode.value + 1) % len(mode_order)
+        self.mode = mode_order[new_index]
+        self.refresh_text_and_ui()
 
     def action_reset_text(self):
         self.keyboardInput.reset_text()
-    #ACTIONS
 
-
-    #ASYNC MESSAGE LISTENERS
+    # ============================================================
+    # MESSAGE LISTENERS
+    # ============================================================
     async def on_typing_completed(self, message: TypingCompleted):
-        self.query_one('#wpmLabel').update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
+        self.query_one("#wpmLabel").update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
         self.attemptSidebar.add_entry(f"{message.wpm:.0f} WPM", message)
 
-        self.activate_screen(message)
+        self.resultsScreen = ResultsScreen(message)
+        self.push_screen(self.resultsScreen)
 
     # async def on_key_pressed(self, message: KeyPressed):
     #     key = message.key.lower()
