@@ -37,21 +37,21 @@ class StaticKeyboardInputSpec(StaticKeyboardInput):
         self._check_start_stop()
 
     def _calculate_accuracy(self):
-        return 1-len(self.mismatches)/len(self.text)
+        return 1-len(self.mismatches)/len(self.text_buffer)
 
     def _calculate_raw_wpm(self):
-        return max((len(self.text.split())/self.time_recent)*60, ((len(self.text)/4.7)/self.time_recent)*60)
+        return max((len(self.text_buffer.split())/self.time_recent)*60, ((len(self.text_buffer)/4.7)/self.time_recent)*60)
     
     def _calculate_raw_cpm(self):
-        return (len( list(self.text) )/self.time_recent)*60 
+        return (len( list(self.text_buffer) )/self.time_recent)*60 
 
     def _check_start_stop(self):
-        if(self.cursor_pos > 1 and self.cursor_pos-1 < len(self.placeholder)):
+        if(self.cursor_pos > 1 and self.cursor_pos-1 < len(self.target_text)):
             self.timepoints.append(round(time.time() - self.time_start, 3))
         if(self.cursor_pos == 1):
             self.time_start = time.time()
 
-        if(self.cursor_pos-1 == len(self.placeholder)-1):
+        if(self.cursor_pos-1 == len(self.target_text)-1):
             self.time_end = time.time()
             
             #TODO: Add hit-ratio influence for the formulas
@@ -60,7 +60,7 @@ class StaticKeyboardInputSpec(StaticKeyboardInput):
             wpm = self._calculate_raw_wpm()
             cpm = self._calculate_raw_cpm()
 
-            accuraacy_info = f"{len(self.mismatches)}/{len(self.text)}/{round(self._calculate_accuracy()*100)}%"
+            accuraacy_info = f"{len(self.mismatches)}/{len(self.text_buffer)}/{round(self._calculate_accuracy()*100)}%"
 
-            self.post_message(TypingCompleted(wpm, cpm, self.placeholder, "", self.wordCount, accuraacy_info, self.timepoints))
+            self.post_message(TypingCompleted(wpm, cpm, self.target_text, "", self.wordCount, accuraacy_info, self.timepoints))
             self.reset_text()

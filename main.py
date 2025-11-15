@@ -71,13 +71,14 @@ class MyApp(App):
     )
 
     textToType = textGenerator.get_text(mode, wordCount, maxWordLen)
+    # textToType = "a\nb\nc\nd"
 
     # --------------------------------------------------------
     # UI COMPONENTS
     # --------------------------------------------------------
     welcomeLabel = Label(id="welcomeLabel", content="Typing-Speedster")
 
-    keyboardInput = StaticKeyboardInputSpec(id="keyboardInput", placeholder=textToType)
+    keyboardInput = StaticKeyboardInputSpec(id="keyboardInput", target_text=textToType)
     keyboardInputContainer = ScrollableContainer(keyboardInput, id="keyboardInputContainer")
 
     labels = Container(

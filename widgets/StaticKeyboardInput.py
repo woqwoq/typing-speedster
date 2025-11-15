@@ -42,16 +42,16 @@ UNMATCH_TEXT_STYLE = Style(color="white", bgcolor="red")
 class StaticKeyboardInput(Static):
     can_focus = True
 
-    def __init__(self, placeholder: str = "", **kwargs):
+    def __init__(self, target_text: str = "", **kwargs):
         super().__init__(**kwargs)
 
-        self.placeholder = placeholder
-        self.text = ""
+        self.target_text = target_text
+        self.text_buffer = ""
         self.cursor_pos = 0
 
         self.mismatches = set()
 
-        self.wordCount = len(placeholder.split())
+        self.wordCount = len(target_text.split())
         
     def on_mount(self):
         self._render_text()
@@ -67,7 +67,7 @@ class StaticKeyboardInput(Static):
         current_cursor = self.cursor_pos-1
         
         
-        if(t[current_cursor].plain != self.placeholder[current_cursor]):
+        if(t[current_cursor].plain != self.target_text[current_cursor]):
             self.mismatches.add(current_cursor)
             t.stylize(UNMATCH_TEXT_STYLE, current_cursor, current_cursor+1)
         elif current_cursor in self.mismatches:
@@ -83,74 +83,67 @@ class StaticKeyboardInput(Static):
         return t
 
     def _render_text(self):
-        t = Text(self.text, TEXT_STYLE) + Text(self.placeholder[self.cursor_pos:], DIM_TEXT_STYLE)
+        t = Text(self.text_buffer, TEXT_STYLE)
         t = self._highlight_mismatches(t)
+
+        if (len(t) > 0 and self.cursor_pos < len(self.target_text) and self.target_text[self.cursor_pos] == '\n'): 
+            t.append(" ", CURSOR_STYLE)
+
+        t.append(Text(self.target_text[self.cursor_pos:], DIM_TEXT_STYLE))
 
         if self.cursor_pos < len(t):
             t.stylize(CURSOR_STYLE, self.cursor_pos, self.cursor_pos + 1)
-        else:
-            t.append(" ", CURSOR_STYLE)
 
         self.update(t)
 
 
     #TODO: Fix cursor not displaying on newline char
     def _jump_to_new_line(self):
-        placeholder_text = list(self.placeholder)
+        if(self.target_text[self.cursor_pos] == '\n'):
+            self._insert_key_and_move_cursor('\n', 1)
 
-        if(placeholder_text[self.cursor_pos] == '\n'):
-            self.cursor_pos+=1
-            self.text += '\n'
+    def _insert_key_and_move_cursor(self, key, cursor_offset):
+        self.text_buffer = self.text_buffer[:self.cursor_pos] + key + self.text_buffer[self.cursor_pos:]
+        self.cursor_pos += cursor_offset
 
     def on_key(self, event: Key):
         key = event.key
-        log(key)
 
-        if len(key) == 1 and key.isprintable():
-            #Character can't be added if we're on a newline
-            if(self.placeholder[self.cursor_pos] == '\n'):
-                return
-            
-            self.post_message(KeyPressed(key))
+        if(self.target_text[self.cursor_pos] == '\n' and (key != 'enter' and key != 'backspace')):
+            return
 
-            self.text = self.text + key
-            self.cursor_pos += 1
+        if len(key) == 1 and key.isprintable():            
+            # self.post_message(KeyPressed(key))
+            self._insert_key_and_move_cursor(key, 1)
+
         elif key == 'enter': 
-            #Jump to the character after newline to continue
             self._jump_to_new_line()
-        elif key == "space":
-            #Character can't be added if we're on a newline
-            if(self.placeholder[self.cursor_pos] == '\n'):
-                return
 
-            self.text = self.text[:self.cursor_pos] + ' ' + self.text[self.cursor_pos:]
-            self.cursor_pos += 1
+        elif key == "space":
+            self._insert_key_and_move_cursor(' ', 1)
+
         elif key == "backspace" and self.cursor_pos > 0:
-            self.text = self.text[:self.cursor_pos - 1] + self.text[self.cursor_pos:]
+            self.text_buffer = self.text_buffer[:self.cursor_pos - 1] + self.text_buffer[self.cursor_pos:]
             self.cursor_pos -= 1
+
         elif key in SPECIAL_CHARACTER_MAP:
-            if(self.placeholder[self.cursor_pos] == '\n'):
-                return
-            
             if(key == 'tab'):
                 event.stop()
             
-            self.text = self.text[:self.cursor_pos] + SPECIAL_CHARACTER_MAP[key] + self.text[self.cursor_pos:]
-            self.cursor_pos += 1
+            self._insert_key_and_move_cursor(SPECIAL_CHARACTER_MAP[key], 1)
 
-        log(self.text)
         self._render_text()
 
     def update_text(self, new_text: str):
         self.wordCount = len(new_text.split())
 
         self.cursor_pos = 0
-        self.text = ""
-        self.placeholder = new_text
+        self.text_buffer = ""
+        self.target_text = new_text
 
         self._render_text()
 
     def reset_text(self):
-        self.update_text(self.placeholder)
+        self.update_text(self.target_text)
 
     
