@@ -3,12 +3,13 @@
 
 ## TODO
 ### **Fixes** 
-- Fix the WPM calculation formula tweakery
+- ~~Fix the WPM calculation formula tweakery~~✅
 - ~~Fix the default difficulty to app's default difficulty~~✅
 - ~~Fix cursor not displaying on newline char~~✅
 - Fix keyboard input moving after the first results
 - ~~Fix perforamnce issues with `KeypressDisplay`~~✅
-- Fix accepting a completely unmatching text
+- ~~Fix accepting a completely unmatching text~~✅ Now final WPM is affected by accuracy
+- Fix results graph showing RAW WPM instead of real?
 
 ### **Best Practices** 
 - Move border styling from python to css
@@ -20,7 +21,7 @@
 
 ### **Features** 
 - Replace unmatched char to what it should be
-- Add hit-ratio influence for the formulas
+- ~~Add hit-ratio influence for the formulas~~
 - Add different modes x
 - Add themes
 - Add custom text

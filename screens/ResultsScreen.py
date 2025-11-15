@@ -9,9 +9,6 @@ from messages.TypingComplete import TypingCompleted
 def calculate_wpm(text, time):
     return (len(text)/4.7/time)*60
 
-def _calculate_raw_wpm(text, time):
-    return max((len(text.split())/time)*60, ((len(text)/4.7)/time)*60)
-
 class ResultsScreen(Screen):
 
     BINDINGS = [("ctrl+z", "close_screen", "Close")]

@@ -37,8 +37,6 @@ CURSOR_STYLE = Style(color="black", bgcolor="white")
 DIM_TEXT_STYLE = Style(color="white", dim=True)
 UNMATCH_TEXT_STYLE = Style(color="white", bgcolor="red")
 
-
-#TODO: Encapsulate keyboard input from high-level typing-test functionality
 class StaticKeyboardInput(Static):
     can_focus = True
 
@@ -65,7 +63,6 @@ class StaticKeyboardInput(Static):
         
         #At this point cursor is one position in front of a typed character
         current_cursor = self.cursor_pos-1
-        
         
         if(t[current_cursor].plain != self.target_text[current_cursor]):
             self.mismatches.add(current_cursor)
@@ -98,7 +95,6 @@ class StaticKeyboardInput(Static):
         self.update(t)
 
 
-    #TODO: Fix cursor not displaying on newline char
     def _jump_to_new_line(self):
         if(self.target_text[self.cursor_pos] == '\n'):
             self._insert_key_and_move_cursor('\n', 1)
