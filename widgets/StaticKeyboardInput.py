@@ -82,6 +82,7 @@ class StaticKeyboardInput(Static):
 
         return t
 
+
     def _render_text(self):
         t = Text(self.text_buffer, TEXT_STYLE)
         t = self._highlight_mismatches(t)
@@ -102,9 +103,11 @@ class StaticKeyboardInput(Static):
         if(self.target_text[self.cursor_pos] == '\n'):
             self._insert_key_and_move_cursor('\n', 1)
 
+
     def _insert_key_and_move_cursor(self, key, cursor_offset):
         self.text_buffer = self.text_buffer[:self.cursor_pos] + key + self.text_buffer[self.cursor_pos:]
         self.cursor_pos += cursor_offset
+
 
     def on_key(self, event: Key):
         key = event.key
@@ -113,7 +116,7 @@ class StaticKeyboardInput(Static):
             return
 
         if len(key) == 1 and key.isprintable():            
-            # self.post_message(KeyPressed(key))
+            self.post_message(KeyPressed(key))
             self._insert_key_and_move_cursor(key, 1)
 
         elif key == 'enter': 
@@ -134,6 +137,7 @@ class StaticKeyboardInput(Static):
 
         self._render_text()
 
+
     def update_text(self, new_text: str):
         self.wordCount = len(new_text.split())
 
@@ -142,6 +146,7 @@ class StaticKeyboardInput(Static):
         self.target_text = new_text
 
         self._render_text()
+
 
     def reset_text(self):
         self.update_text(self.target_text)

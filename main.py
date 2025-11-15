@@ -15,6 +15,7 @@ from widgets.StaticKeyboardInputSpec import StaticKeyboardInputSpec
 from screens.ResultsScreen import ResultsScreen
 
 from messages.TypingComplete import TypingCompleted
+from messages.KeyPressed import KeyPressed
 
 
 # ============================================================
@@ -89,6 +90,9 @@ class MyApp(App):
 
     attemptSidebar = AttemptSidebar(id="attemptSidebarCollapsible", title="Previous Attempts")
 
+    keypressDisplay = KeypressDisplay(id="keypressDisplay")
+    keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
+
     resultsScreen = None
 
     # ============================================================
@@ -99,7 +103,7 @@ class MyApp(App):
         yield self.labels
         yield self.keyboardInputContainer
         yield self.attemptSidebar
-        # yield self.keypressDisplayContainer
+        yield self.keypressDisplayContainer
         yield Footer()
 
     def on_mount(self):
@@ -186,9 +190,9 @@ class MyApp(App):
         self.resultsScreen = ResultsScreen(message)
         self.push_screen(self.resultsScreen)
 
-    # async def on_key_pressed(self, message: KeyPressed):
-    #     key = message.key.lower()
-    #     self.keypressDisplay.highlight_key(key)
+    async def on_key_pressed(self, message: KeyPressed):
+        key = message.key.lower()
+        self.keypressDisplay.highlight_key(key)
     #ASYNC MESSAGE LISTENERS
 
 MyApp().run()

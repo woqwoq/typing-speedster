@@ -4,19 +4,19 @@
 ## TODO
 ### **Fixes** 
 - Fix the WPM calculation formula tweakery
-- Fix the default difficulty to app's default difficulty
-- Fix cursor not displaying on newline char
+- ~~Fix the default difficulty to app's default difficulty~~✅
+- ~~Fix cursor not displaying on newline char~~✅
 - Fix keyboard input moving after the first results
-- Fix perforamnce issues with `KeypressDisplay`
+- ~~Fix perforamnce issues with `KeypressDisplay`~~✅
 - Fix accepting a completely unmatching text
 
 ### **Best Practices** 
 - Move border styling from python to css
-- Encapsulate keyboard input from high-level typing-test functionality
+- ~~Encapsulate keyboard input from high-level typing-test functionality~~✅
 - Add dynamic config
-- Add scroallable container to attempt entry's tooltip
+- ~~Add scroallable container to attempt entry's tooltip~~❌Not doable
 - Cleanup `ResultsScreen`
-- Change `Code.txt` and `Lyrics.txt` to JSON
+- ~~Change `Code.txt` and `Lyrics.txt` to JSON~~✅
 
 ### **Features** 
 - Replace unmatched char to what it should be
