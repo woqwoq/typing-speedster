@@ -7,7 +7,7 @@ from messages.AttemptEntryClicked import AttemptEntryClicked
 from screens.ResultsScreen import ResultsScreen
 
 from widgets.AttemptEntry import AttemptEntry
-from widgets.StaticKeyboardInput import TypingCompleted
+from messages.TypingComplete import TypingCompleted
 
 
 UNUSABLE_HEIGHT = 4

@@ -3,12 +3,8 @@ from textual.events import Key
 from rich.text import Text
 from rich.style import Style
 
-from core.Difficulty import Difficulty
-from messages.TypingComplete import TypingCompleted
 from messages.KeyPressed import KeyPressed
 from core.Utils import remove_if_greater
-
-import time
 
 from textual import log
 
@@ -20,7 +16,7 @@ SPECIAL_CHARACTER_MAP ={"number_sign"           : "#",
                         "right_parenthesis"     : ")",
                         "apostrophe"            : "'",
                         "left_curly_bracket"    : "{",
-                        "right_curly_bracket"   : "]",
+                        "right_curly_bracket"   : "}",
                         "left_square_bracket"   : "[",
                         "right_square_bracket"  : "]",
                         "quotation_mark"        : "\"",
@@ -53,15 +49,8 @@ class StaticKeyboardInput(Static):
         self.text = ""
         self.cursor_pos = 0
 
-        self.time_start = None
-        self.time_end = None
-        self.time_recent = None
-
         self.mismatches = set()
 
-        self.timepoints = []
-
-        self.difficulty = Difficulty.DEFAULT #TODO: Fix the default difficulty to app's default difficulty
         self.wordCount = len(placeholder.split())
         
     def on_mount(self):
@@ -94,7 +83,7 @@ class StaticKeyboardInput(Static):
         return t
 
     def _render_text(self):
-        t = Text(self.text, TEXT_STYLE) +Text(self.placeholder[self.cursor_pos:], DIM_TEXT_STYLE)
+        t = Text(self.text, TEXT_STYLE) + Text(self.placeholder[self.cursor_pos:], DIM_TEXT_STYLE)
         t = self._highlight_mismatches(t)
 
         if self.cursor_pos < len(t):
@@ -103,7 +92,6 @@ class StaticKeyboardInput(Static):
             t.append(" ", CURSOR_STYLE)
 
         self.update(t)
-        self._check_start_stop()
 
 
     #TODO: Fix cursor not displaying on newline char
@@ -116,6 +104,8 @@ class StaticKeyboardInput(Static):
 
     def on_key(self, event: Key):
         key = event.key
+        log(key)
+
         if len(key) == 1 and key.isprintable():
             #Character can't be added if we're on a newline
             if(self.placeholder[self.cursor_pos] == '\n'):
@@ -123,7 +113,7 @@ class StaticKeyboardInput(Static):
             
             self.post_message(KeyPressed(key))
 
-            self.text = self.text[:self.cursor_pos] + key + self.text[self.cursor_pos:]
+            self.text = self.text + key
             self.cursor_pos += 1
         elif key == 'enter': 
             #Jump to the character after newline to continue
@@ -148,52 +138,19 @@ class StaticKeyboardInput(Static):
             self.text = self.text[:self.cursor_pos] + SPECIAL_CHARACTER_MAP[key] + self.text[self.cursor_pos:]
             self.cursor_pos += 1
 
-
+        log(self.text)
         self._render_text()
 
-    def update_text(self, new_text: str, difficulty):
+    def update_text(self, new_text: str):
         self.wordCount = len(new_text.split())
-        self.difficulty = difficulty
 
         self.cursor_pos = 0
         self.text = ""
         self.placeholder = new_text
 
-        self.time_start = None
-        self.time_end = None
-        self.timepoints = []
-
         self._render_text()
 
     def reset_text(self):
-        self.update_text(self.placeholder, self.difficulty)
+        self.update_text(self.placeholder)
 
-    def _calculate_accuracy(self):
-        return 1-len(self.mismatches)/len(self.text)
-
-    def _calculate_raw_wpm(self):
-        return max((len(self.text.split())/self.time_recent)*60, ((len(self.text)/4.7)/self.time_recent)*60)
     
-    def _calculate_raw_cpm(self):
-        return (len( list(self.text) )/self.time_recent)*60 
-
-    def _check_start_stop(self):
-        if(self.cursor_pos > 1 and self.cursor_pos-1 < len(self.placeholder)):
-            self.timepoints.append(round(time.time() - self.time_start, 3))
-            # log(f"word=\"{self.text}\"\ndata={self.timepoints}")
-        if(self.cursor_pos == 1):
-            self.time_start = time.time()
-
-        if(self.cursor_pos-1 == len(self.placeholder)-1):
-            self.time_end = time.time()
-            
-            #TODO: Add hit-ratio influence for the formulas
-            self.time_recent = self.time_end - self.time_start
-
-            wpm = self._calculate_raw_wpm()
-            cpm = self._calculate_raw_cpm()
-
-            accuraacy_info = f"{len(self.mismatches)}/{len(self.text)}/{round(self._calculate_accuracy()*100)}%"
-
-            self.post_message(TypingCompleted(wpm, cpm, self.placeholder, self.difficulty, self.wordCount, accuraacy_info, self.timepoints))
-            self.reset_text()

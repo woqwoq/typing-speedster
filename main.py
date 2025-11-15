@@ -10,6 +10,7 @@ from core.TextGenerator import TextGenerator
 from widgets.AttemptSidebar import AttemptSidebar
 from widgets.KeypressDisplay import KeypressDisplay
 from widgets.StaticKeyboardInput import StaticKeyboardInput
+from widgets.StaticKeyboardInputSpec import StaticKeyboardInputSpec
 
 from screens.ResultsScreen import ResultsScreen
 
@@ -76,7 +77,7 @@ class MyApp(App):
     # --------------------------------------------------------
     welcomeLabel = Label(id="welcomeLabel", content="Typing-Speedster")
 
-    keyboardInput = StaticKeyboardInput(id="keyboardInput", placeholder=textToType)
+    keyboardInput = StaticKeyboardInputSpec(id="keyboardInput", placeholder=textToType)
     keyboardInputContainer = ScrollableContainer(keyboardInput, id="keyboardInputContainer")
 
     labels = Container(
@@ -111,7 +112,7 @@ class MyApp(App):
     def refresh_text_and_ui(self):
         self.textToType = self.textGenerator.get_text(self.mode, self.wordCount, self.maxWordLen)
         self.update_labels()
-        self.keyboardInput.update_text(self.textToType, self.difficulty)
+        self.keyboardInput.update_text(self.textToType)
 
     def update_labels(self):
         container = self.query_one("#keyboardInputContainer")
@@ -178,6 +179,7 @@ class MyApp(App):
     # ============================================================
     async def on_typing_completed(self, message: TypingCompleted):
         self.query_one("#wpmLabel").update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
+        message.difficulty = self.difficulty
         self.attemptSidebar.add_entry(f"{message.wpm:.0f} WPM", message)
 
         self.resultsScreen = ResultsScreen(message)
