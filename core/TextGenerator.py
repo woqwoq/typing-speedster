@@ -1,6 +1,14 @@
 import random
 from textual import log
 from core.Mode import Mode
+from core.JsonHandler import JsonHandler
+
+
+JSON_CODE_SCHEMA = ['entry_desc', 'entry_text']
+JSON_CODE_SCHEMA_PREPROCESS = [False, True]
+
+JSON_LYRICS_SCHEMA = ['song_name', 'lyrics']
+JSON_LYRICS_SCHEMA_PREPROCESS = [False, True]
 
 class TextGenerator():
     
@@ -46,34 +54,28 @@ class TextGenerator():
         text = self._remove_unallowed_chars(' '.join(text))
         return text
     
-    def generate_lyrics(self, amount: int):
-        lyrics_lines = open(self.lyrics_source_path, 'r').readlines()
-        start = random.randint(0, len(lyrics_lines)-amount-1)
-        end = start+amount
+    def generate_lyrics(self, song_number: int, allowedLen: list):
+        handler = JsonHandler(self.lyrics_source_path, JSON_LYRICS_SCHEMA, JSON_LYRICS_SCHEMA_PREPROCESS)
+        lyrics_lines = handler.get_entry(song_number%handler.size())['lyrics']
+
+        line_count = random.randint(allowedLen[0], allowedLen[1])
+
+        start = random.randint(0, len(lyrics_lines)-line_count-1)
+        end = start+line_count
 
         return ''.join(lyrics_lines[start:end])
     
     def generate_code_fragment(self, number: int):
-        code_lines = open(self.code_source_path, 'r').readlines()
-        code_lines = ''.join(code_lines).replace('    ', '\t').split('---')
+        handler = JsonHandler(self.code_source_path, JSON_CODE_SCHEMA, JSON_CODE_SCHEMA_PREPROCESS)
 
-        res_lines = []
-        for i in range(len(code_lines)):
-            code_lines[i] = code_lines[i].strip('\n')
-            if(code_lines[i] != ''):
-                res_lines.append(code_lines[i])
-
-        return res_lines[number%len(res_lines)]
-
-
-
+        return ''.join(handler.get_entry(number%handler.size())['entry_text'])
 
     def get_text(self, mode: Mode, amount: int, allowedLen: list):
         match mode:
             case Mode.TEXT:
                 return self.generate_text(amount, allowedLen)
             case Mode.LYRICS:
-                return self.generate_lyrics(amount)
+                return self.generate_lyrics(amount, allowedLen)
             # case Mode.QUOTE:
             #     self.generate_quote(amount)
             case Mode.CODE:
