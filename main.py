@@ -82,13 +82,13 @@ class MyApp(App):
     keyboardInput = StaticKeyboardInputSpec(id="keyboardInput", target_text=textToType)
     keyboardInputContainer = ScrollableContainer(keyboardInput, id="keyboardInputContainer")
 
-    labels = Container(
-        Label("15", id="timerLabel"),
-        Label("", id="wpmLabel"),
-        id="labelContainer",
-    )
+    # labels = Container(
+    #     Label("15", id="timerLabel"),
+    #     Label("", id="wpmLabel"),
+    #     id="labelContainer",
+    # )
 
-    attemptSidebar = AttemptSidebar(id="attemptSidebarCollapsible", title="Previous Attempts")
+    attemptSidebar = AttemptSidebar(id="attemptSidebarCollapsible", title="Prev. Attempts")
 
     keypressDisplay = KeypressDisplay(id="keypressDisplay")
     keypressDisplayContainer = Container(keypressDisplay, id="keypressDisplayContainer")
@@ -100,7 +100,7 @@ class MyApp(App):
     # ============================================================
     def compose(self):
         yield self.welcomeLabel
-        yield self.labels
+        # yield self.labels
         yield self.keyboardInputContainer
         yield self.attemptSidebar
         yield self.keypressDisplayContainer
@@ -183,7 +183,7 @@ class MyApp(App):
     # MESSAGE LISTENERS
     # ============================================================
     async def on_typing_completed(self, message: TypingCompleted):
-        self.query_one("#wpmLabel").update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
+        # self.query_one("#wpmLabel").update(f"{message.wpm:.0f} WPM {message.cpm:.0f} CPM")
         message.difficulty = self.difficulty
         self.attemptSidebar.add_entry(f"{message.wpm:.0f} WPM", message)
 

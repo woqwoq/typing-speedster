@@ -25,7 +25,7 @@
 - Add different modes x
 - Add themes
 - Add custom text
-- Add stats
+- Add stats (eror/key heatmaps)
 - Add json database for attempts/stats
 - Add command palette for the custom text
 
