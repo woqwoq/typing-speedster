@@ -1,0 +1,18 @@
+#container{
+    layout: horizontal;
+    align: center middle;
+}
+
+#textContainer{
+    margin: 1 1;
+    align: center middle;
+}
+
+#textStats{
+    
+}
+
+#textArea{
+    margin: 1 3;
+    width: 70%;
+}
