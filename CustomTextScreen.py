@@ -5,7 +5,7 @@ from textual.containers import Container
 from textual_plotext import PlotextPlot
 from textual import log
 
-from core.TextStats import TextStats
+from core.TextStats import TextStats, merge_arr
 
 TextArea.BINDINGS = TextArea.BINDINGS[:-2]
 
@@ -31,14 +31,6 @@ class TextAreaSelection(App):
     def get_text_stats(self):
         self.stats = TextStats(self.text_area.text)
 
-    
-    #  self.word_count = len(text.split(' '))
-    #     self.char_count = len(text)
-
-    #     self.vowels = {}
-    #     self.consonants = {}
-    #     self.symbols = {}
-
     def generate_stats_text(self):
         self.get_text_stats()
         return f"""Word Count: {self.stats.word_count}
@@ -47,19 +39,19 @@ Vowel Count: {self.stats.get_vowel_count()}
 Consonant Count: {self.stats.get_consonant_count()}
 Symbol Count: {self.stats.get_symbol_count()}"""
     
-    def render_plot(self, data):
-        self.query_one("#mainPlot").plt.plot(data, marker ="braille")
+    def render_plot(self, x_data, y_data):
+        self.main_plot.plt.clear_figure()
+        self.main_plot.refresh()
+        self.main_plot.plt.ylim(0, max(y_data))
+        self.query_one("#mainPlot").plt.bar(x_data, y_data, marker ="braille", orientation="horizontal")
 
     def update_text_stats(self):
         self.text_stats.content = self.generate_stats_text()
 
     def action_save_text(self):
-        # self.render
-        log(self.text_area.text)
         self.update_text_stats()
+        self.render_plot(merge_arr(self.stats.get_all_vowels(), self.stats.get_all_cons()), merge_arr(self.stats.get_all_vowel_freq(), self.stats.get_all_cons_freq()))
         
-
-
-
+        
 asd = TextAreaSelection()
 asd.run()

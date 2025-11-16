@@ -4,6 +4,9 @@ CONSONANTS = {
     'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'
 }
 
+def merge_arr(arr1, arr2):
+    [arr1.append(element) for element in arr2]
+    return arr1 
 
 class TextStats:
     def __init__(self, text):
@@ -68,7 +71,24 @@ class TextStats:
     def update_text(self, new_text):
         self.text = new_text
 
+    def _get_dict_attribute(self, dict):
+        return [attr for attr in dict]
+
+    def _get_dict_vals(self, dict):
+        return [dict[attr] for attr in dict]
     
+    def get_all_vowels(self):
+        return self._get_dict_attribute(self.vowels)
+
+    def get_all_vowel_freq(self):
+        return self._get_dict_vals(self.vowels)
+    
+    def get_all_cons(self):
+        return self._get_dict_attribute(self.consonants)
+
+    def get_all_cons_freq(self):
+        return self._get_dict_vals(self.consonants)
+
 asd = TextStats("Hello, my name is vlad, im a second year comp sci student")
 
 print(asd.word_count)
@@ -76,6 +96,7 @@ print(asd.char_count)
 print(asd.vowels)
 print(asd.consonants)
 print(asd.symbols)
-print(asd.get_vowel_count())
-print(asd.get_consonant_count())
-print(asd.get_symbol_count())
+print(asd.vowels)
+
+print(asd.get_all_vowels())
+print(asd.get_all_vowel_freq())
