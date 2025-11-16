@@ -8,6 +8,8 @@
     height: auto;
     min-height: 35%;
     max-height: 40%;
+    border-title-align: center;
+    border: heavy blue;
 }
 
 #keypressDisplayContainer{

@@ -6,22 +6,22 @@
 - ~~Fix the WPM calculation formula tweakery~~✅
 - ~~Fix the default difficulty to app's default difficulty~~✅
 - ~~Fix cursor not displaying on newline char~~✅
-- Fix keyboard input moving after the first results
+- ~~Fix keyboard input moving after the first results~~✅
 - ~~Fix perforamnce issues with `KeypressDisplay`~~✅
 - ~~Fix accepting a completely unmatching text~~✅ Now final WPM is affected by accuracy
 - Fix results graph showing RAW WPM instead of real?
 
 ### **Best Practices** 
-- Move border styling from python to css
+- ~~Move border styling from python to css~~✅
 - ~~Encapsulate keyboard input from high-level typing-test functionality~~✅
 - Add dynamic config
 - ~~Add scroallable container to attempt entry's tooltip~~❌Not doable
-- Cleanup `ResultsScreen`
+- ~~Cleanup `ResultsScreen`~~✅
 - ~~Change `Code.txt` and `Lyrics.txt` to JSON~~✅
 
 ### **Features** 
 - Replace unmatched char to what it should be
-- ~~Add hit-ratio influence for the formulas~~
+- ~~Add hit-ratio influence for the formulas~~✅
 - Add different modes x
 - Add themes
 - Add custom text

@@ -69,18 +69,12 @@ class ResultsScreen(Screen):
 
     def _stylize(self):
         self.query_one("#mistakesContainer").border_title = f"Write something cool here"
-        self.query_one("#mistakesContainer").styles.border_title_align = "center"
-        self.query_one("#mistakesContainer").styles.border = ("heavy", "white")
 
         self.query_one("#infoLabelContainer").border_title = f"Info"
         self.query_one("#infoLabelContainer").border_subtitle = f"{self.time}"
-        self.query_one("#infoLabelContainer").styles.border_title_align = "center"
-        self.query_one("#infoLabelContainer").styles.border = ("heavy", "white")
 
         self.query_one("#textLabelContainer").border_title = f"Text"
-        self.query_one("#textLabelContainer").styles.border_title_align = "center"
-        self.query_one("#textLabelContainer").styles.border = ("heavy", "white")
-
+        
     def on_mount(self):
         self._stylize()
         self._update_labels()

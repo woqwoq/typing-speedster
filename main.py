@@ -108,8 +108,6 @@ class MyApp(App):
 
     def on_mount(self):
         self.update_labels()
-        self.keyboardInputContainer.styles.border_title_align = "center"
-        self.keyboardInputContainer.styles.border = ("heavy", "blue")
 
     # ============================================================
     # HELPERS
