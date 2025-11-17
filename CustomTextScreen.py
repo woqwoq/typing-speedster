@@ -7,6 +7,8 @@ from textual import log
 
 from core.TextStats import TextStats, merge_arr
 
+import plotext as plt
+
 TextArea.BINDINGS = TextArea.BINDINGS[:-2]
 
 class TextAreaSelection(App):
@@ -19,7 +21,7 @@ class TextAreaSelection(App):
 
     text_area = TextArea(placeholder="Type your custom text here...", id="textArea")
     text_stats = Static("a\nb\nc\na\nb\nc\na\nb\nc\n", id="textStats")
-    main_plot = PlotextPlot(id="mainPlot")
+    main_plot = Static(id="mainPlot")
 
     stats = None
 
@@ -46,11 +48,19 @@ Symbol Count: {self.stats.get_symbol_count()}"""
         self.query_one("#mainPlot").plt.bar(x_data, y_data, marker ="braille", orientation="horizontal")
 
     def update_text_stats(self):
-        self.text_stats.content = self.generate_stats_text()
+        self.text_stats.update(self.generate_stats_text())
+
+    def doTheTrick(self, x_data, y_data):
+        plt.simple_bar(x_data, y_data, width=self.main_plot.size.width)
+        plot = plt.build()
+        self.main_plot.update(plot)
+        log(list(plot))
+
 
     def action_save_text(self):
         self.update_text_stats()
-        self.render_plot(merge_arr(self.stats.get_all_vowels(), self.stats.get_all_cons()), merge_arr(self.stats.get_all_vowel_freq(), self.stats.get_all_cons_freq()))
+        self.doTheTrick(merge_arr(self.stats.get_all_vowels(), self.stats.get_all_cons()), merge_arr(self.stats.get_all_vowel_freq(), self.stats.get_all_cons_freq()))
+        # self.render_plot(merge_arr(self.stats.get_all_vowels(), self.stats.get_all_cons()), merge_arr(self.stats.get_all_vowel_freq(), self.stats.get_all_cons_freq()))
         
         
 asd = TextAreaSelection()
