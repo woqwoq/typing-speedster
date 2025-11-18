@@ -1,6 +1,8 @@
 #keyboardInput{
     text-wrap: wrap;
     height: auto;
+
+    background: $background;
 }
 
 #keyboardInputContainer{
@@ -8,34 +10,46 @@
     height: auto;
     min-height: 35%;
     max-height: 40%;
+
     border-title-align: center;
-    border: heavy blue;
+    border: heavy $secondary;
+
+    background: $background;
 }
 
 #keypressDisplayContainer{
     margin: 1 3;
     width: 100%;
     align: center middle;
+
+    background: $background;
 }
 
 #attemptSidebarCollapsible{
     dock: left;
     height: 100%;
     width: 19;
+
+    
+    background: $background;
+    Static{
+        color: $primary;
+    }
 }
 
-#attempyEntry{
-    link-style-hover: bold;
+AttemptEntry{
+    text-style: underline;
+}
+AttemptEntry:hover{
+    background: $foreground;
 }
 
 #welcomeLabel {
     text-align: center;
     width: 100%;
     height: 3;
-}
 
-#restartButton{
-    margin: 0 4;
+    color: $primary;
 }
 
 #wpmLabel {
