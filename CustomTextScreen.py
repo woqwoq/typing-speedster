@@ -20,14 +20,14 @@ class TextAreaSelection(App):
     ]
 
     text_area = TextArea(placeholder="Type your custom text here...", id="textArea")
-    text_stats = Static("a\nb\nc\na\nb\nc\na\nb\nc\n", id="textStats")
-    main_plot = Static(id="mainPlot")
+    text_stats = Static("Char Count:\nVowel Count:\nConsonant Count:\nSymbol Count:", id="textStats")
+    main_plot = PlotextPlot(id="mainPlot")
 
     stats = None
 
 
     def compose(self) -> ComposeResult:
-        yield Container(self.text_area, Container(self.text_stats, self.main_plot, id="textContainer"), id="container")
+        yield Container(Container(self.text_area, Container(self.text_stats, id="statsContainer"), id="textContainer"), Container(self.main_plot, id="plotContainer"), id="mainContainer")
         yield Footer()
 
     def get_text_stats(self):
@@ -45,7 +45,7 @@ Symbol Count: {self.stats.get_symbol_count()}"""
         self.main_plot.plt.clear_figure()
         self.main_plot.refresh()
         self.main_plot.plt.ylim(0, max(y_data))
-        self.query_one("#mainPlot").plt.bar(x_data, y_data, marker ="braille", orientation="horizontal")
+        self.query_one("#mainPlot").plt.bar(x_data, y_data, marker ="braille", orientation="vertical")
 
     def update_text_stats(self):
         self.text_stats.update(self.generate_stats_text())
@@ -59,8 +59,8 @@ Symbol Count: {self.stats.get_symbol_count()}"""
 
     def action_save_text(self):
         self.update_text_stats()
-        self.doTheTrick(merge_arr(self.stats.get_all_vowels(), self.stats.get_all_cons()), merge_arr(self.stats.get_all_vowel_freq(), self.stats.get_all_cons_freq()))
-        # self.render_plot(merge_arr(self.stats.get_all_vowels(), self.stats.get_all_cons()), merge_arr(self.stats.get_all_vowel_freq(), self.stats.get_all_cons_freq()))
+        # self.doTheTrick(merge_arr(self.stats.get_all_vowels(), self.stats.get_all_cons()), merge_arr(self.stats.get_all_vowel_freq(), self.stats.get_all_cons_freq()))
+        self.render_plot(merge_arr(self.stats.get_all_vowels(), self.stats.get_all_cons()), merge_arr(self.stats.get_all_vowel_freq(), self.stats.get_all_cons_freq()))
         
         
 asd = TextAreaSelection()

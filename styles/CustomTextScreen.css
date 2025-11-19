@@ -1,17 +1,21 @@
-#container{
+#textContainer{
     layout: horizontal;
-    align: center middle;
 }
 
-#textContainer{
+#statsContainer{
     margin: 1 1;
-    align: center top;
+    layout: vertical;
+
+}
+
+#textStats{
+    width: 20;
 }
 
 #textArea{
-    margin: 1 3;
-    width: 50%;
+    margin: 1 1;
 }
 
-#mainPlot{
+#plotContainer{
+    margin: 0 1;
 }
