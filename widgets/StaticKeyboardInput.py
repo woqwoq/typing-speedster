@@ -31,12 +31,6 @@ SPECIAL_CHARACTER_MAP ={"number_sign"           : "#",
                         "dollar_sign"           : "$",
                         "slash"                 : "/"}
 
-
-TEXT_STYLE = Style(color="white")
-CURSOR_STYLE = Style(color="black", bgcolor="white")
-DIM_TEXT_STYLE = Style(color="white", dim=True)
-UNMATCH_TEXT_STYLE = Style(color="white", bgcolor="red")
-
 class StaticKeyboardInput(Static):
     can_focus = True
 
@@ -50,8 +44,21 @@ class StaticKeyboardInput(Static):
         self.mismatches = set()
 
         self.wordCount = len(target_text.split())
+
+        self.TEXT_STYLE = None
+        self.CURSOR_STYLE = None
+        self.DIM_TEXT_STYLE = None
+        self.UNMATCH_TEXT_STYLE = None
         
+    def init_styles(self):
+        self.TEXT_STYLE = Style(color=self.app.get_css_variables()["success"])
+        self.CURSOR_STYLE = Style(color="black", bgcolor="white")
+        self.DIM_TEXT_STYLE = Style(color=self.app.get_css_variables()["secondary"])
+        # DIM_TEXT_STYLE = Style(color="white", dim=True)
+        self.UNMATCH_TEXT_STYLE = Style(color="white", bgcolor="red")
+
     def on_mount(self):
+        self.init_styles()
         self._render_text()
         self.focus()
 
@@ -66,7 +73,7 @@ class StaticKeyboardInput(Static):
         
         if(t[current_cursor].plain != self.target_text[current_cursor]):
             self.mismatches.add(current_cursor)
-            t.stylize(UNMATCH_TEXT_STYLE, current_cursor, current_cursor+1)
+            t.stylize(self.UNMATCH_TEXT_STYLE, current_cursor, current_cursor+1)
         elif current_cursor in self.mismatches:
             self.mismatches.remove(current_cursor)
 
@@ -75,22 +82,22 @@ class StaticKeyboardInput(Static):
 
         #Highlight old mismatches
         for mismatch_index in self.mismatches:
-            t.stylize(UNMATCH_TEXT_STYLE, mismatch_index, mismatch_index+1)
+            t.stylize(self.UNMATCH_TEXT_STYLE, mismatch_index, mismatch_index+1)
 
         return t
 
 
     def _render_text(self):
-        t = Text(self.text_buffer, TEXT_STYLE)
+        t = Text(self.text_buffer, self.TEXT_STYLE)
         t = self._highlight_mismatches(t)
 
         if (len(t) > 0 and self.cursor_pos < len(self.target_text) and self.target_text[self.cursor_pos] == '\n'): 
-            t.append(" ", CURSOR_STYLE)
+            t.append(" ", self.CURSOR_STYLE)
 
-        t.append(Text(self.target_text[self.cursor_pos:], DIM_TEXT_STYLE))
+        t.append(Text(self.target_text[self.cursor_pos:], self.DIM_TEXT_STYLE))
 
         if self.cursor_pos < len(t):
-            t.stylize(CURSOR_STYLE, self.cursor_pos, self.cursor_pos + 1)
+            t.stylize(self.CURSOR_STYLE, self.cursor_pos, self.cursor_pos + 1)
 
         self.update(t)
 

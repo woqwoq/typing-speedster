@@ -44,7 +44,7 @@ class AttemptSidebar(Widget):
 
     #TODO: Or make put it inside the scrollable container
     def add_entry(self, mainText: str, message: TypingCompleted):
-        current_entry = AttemptEntry(f"[@click='noshit']{self.entry_count+1}. {mainText}[/]", id=f"entry_{self.entry_count}", classes="attemptEntry")
+        current_entry = AttemptEntry(f"{self.entry_count+1}. {mainText}", id=f"entry_{self.entry_count}", classes="attemptEntry")
         
         tooltip = message.generate_tooltip()
         #Shorten the tooltip if needed

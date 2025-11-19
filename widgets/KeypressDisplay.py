@@ -7,12 +7,11 @@ from rich.style import Style
 
 from time import time
 
-from widgets.StaticKeyboardInput import DIM_TEXT_STYLE, UNMATCH_TEXT_STYLE
 
 IGNORED_CHARS = {'\n', '\t', ' '}
 DEFAULT_OFFSET = 2
-DEFAULT_STYLE = DIM_TEXT_STYLE
-HIGHLIGHT_STYLE = UNMATCH_TEXT_STYLE
+DEFAULT_STYLE = Style(color="white", dim=True)
+HIGHLIGHT_STYLE = Style(bgcolor="red")
 
 
 #TODO: Add a primitive animation because of performance drops.
