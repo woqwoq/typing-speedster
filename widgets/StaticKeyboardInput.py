@@ -53,7 +53,7 @@ class StaticKeyboardInput(Static):
     def init_styles(self):
         self.TEXT_STYLE = Style(color=self.app.get_css_variables()["success"])
         self.CURSOR_STYLE = Style(color="black", bgcolor="white")
-        self.DIM_TEXT_STYLE = Style(color=self.app.get_css_variables()["secondary"])
+        self.DIM_TEXT_STYLE = Style(color=self.app.get_css_variables()["secondary-lighten-2"])
         # DIM_TEXT_STYLE = Style(color="white", dim=True)
         self.UNMATCH_TEXT_STYLE = Style(color="white", bgcolor="red")
 

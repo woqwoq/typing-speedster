@@ -12,7 +12,7 @@
     max-height: 40%;
 
     border-title-align: center;
-    border: heavy $accent;
+    border: heavy $foreground;
 
     background: $background;
 }

@@ -14,7 +14,7 @@ Screen{
     width: 50%;
 
     border-title-align: center;
-    border: heavy white;
+    border: heavy $foreground;
 }
 
 /* info block should be done */
@@ -24,25 +24,33 @@ Screen{
     width: 50%;
 
     border-title-align: center;
-    border: heavy white;
+    border: heavy $foreground;
 }
 
 #infoLabelLeft{
     text-align: left;
     width: 50%;
+
+    color: $primary;
 }
 
 #infoLabelRight{
     text-align: left;
     width: auto;
+
+    color: $primary;
 }
 /* info */
+
+#textLabel{
+    color: $primary;
+}
 
 #textLabelContainer{
     margin: 0 3;
 
     border-title-align: center;
-    border: heavy white;
+    border: heavy $foreground;
 }
 
 
