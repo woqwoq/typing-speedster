@@ -9,7 +9,7 @@ from textual import log
 
 
 #TODO: Encapsulate keyboard input from high-level typing-test functionality
-class StaticKeyboardInputSpec(StaticKeyboardInput):
+class TypingTest(StaticKeyboardInput):
     can_focus = True
 
     def __init__(self, **kwargs):

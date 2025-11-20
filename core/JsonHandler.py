@@ -12,9 +12,12 @@ class JsonHandler:
 
 
     def _parse_json(self, file_path):
-        file = open(file_path, 'r')
-        contents = json.load(file)
-        file.close()
+        try:
+            file = open(file_path, 'r')
+            contents = json.load(file)
+            file.close()
+        except FileNotFoundError:
+            return None
 
         return contents
 
@@ -77,11 +80,20 @@ class JsonHandler:
         if write:
             self.write_json()
 
+    def is_valid(self):
+        return self.contents != None
+
     def get_entry(self, number):
-        return self.contents[number]
+        if self.contents != None:
+            return self.contents[number]
+        
+        return None
     
     def size(self):
-        return len(self.contents)
+        if self.contents != None:
+            return len(self.contents)
+        
+        return 0
         
     def __str__(self):
         return str(json.dumps(self.contents, indent=4))

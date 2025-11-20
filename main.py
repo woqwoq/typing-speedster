@@ -10,7 +10,7 @@ from core.TextGenerator import TextGenerator
 from widgets.AttemptSidebar import AttemptSidebar
 from widgets.KeypressDisplay import KeypressDisplay
 from widgets.StaticKeyboardInput import StaticKeyboardInput
-from widgets.StaticKeyboardInputSpec import StaticKeyboardInputSpec
+from widgets.TypingTest import TypingTest
 
 from screens.ResultsScreen import ResultsScreen
 
@@ -79,7 +79,7 @@ class MyApp(App):
     # --------------------------------------------------------
     welcomeLabel = Label(id="welcomeLabel", content="Typing-Speedster")
 
-    keyboardInput = StaticKeyboardInputSpec(id="keyboardInput", target_text=textToType)
+    keyboardInput = TypingTest(id="keyboardInput", target_text=textToType)
     keyboardInputContainer = ScrollableContainer(keyboardInput, id="keyboardInputContainer")
 
     # labels = Container(

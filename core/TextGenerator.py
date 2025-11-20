@@ -44,6 +44,9 @@ class TextGenerator():
         
         return text
     
+    def _get_error_text(self, path):
+        return f"Error: {path} is empty or doesn't exist!"
+
     def generate_text(self, amount: int, allowedLen: list):
         text = []
         for i in range(amount):
@@ -58,6 +61,9 @@ class TextGenerator():
     
     def generate_lyrics(self, song_number: int, allowedLen: list):
         handler = JsonHandler(self.lyrics_source_path, JSON_LYRICS_SCHEMA, JSON_LYRICS_SCHEMA_PREPROCESS)
+        if not handler.is_valid():
+            return self._get_error_text(self.lyrics_source_path)
+        
         entry = handler.get_entry(song_number%handler.size())
         lyrics_lines = entry[JSON_LYRICS_SCHEMA[1]]
 
@@ -71,6 +77,9 @@ class TextGenerator():
     
     def generate_code_fragment(self, number: int):
         handler = JsonHandler(self.code_source_path, JSON_CODE_SCHEMA, JSON_CODE_SCHEMA_PREPROCESS)
+        if not handler.is_valid():
+            return self._get_error_text(self.code_source_path)
+        
         entry = handler.get_entry(number%handler.size())
         
         self.recent_description = entry[JSON_CODE_SCHEMA[0]]
