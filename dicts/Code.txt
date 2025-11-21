@@ -1,0 +1,18 @@
+[
+    {
+        "entry_desc": "For Loop",
+        "entry_text": [
+            "for (int i = 0; i < arr.length; i++)"
+        ]
+    },
+    {
+        "entry_desc": "c code",
+        "entry_text": [
+            "#include <stdio.h>\n",
+            "int main() {\n",
+            "\tprintf(\"Hello, World!\");\n",
+            "\treturn 0;\n",
+            "}"
+        ]
+    }
+]
