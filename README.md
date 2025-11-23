@@ -43,6 +43,25 @@
 ├── styles          - All CSS files for UI styling
 └── widgets         - GUI widgets and components (e.g., input fields, keypress displays)
 ```
+## Dictionary Formats
+
+The main formats for JSON data used by `TextGenerator` are defined by the schemas in `/core/TextGenerator.py`. For example:
+
+`JSON_CODE_SCHEMA = ['entry_desc', 'entry_text']`
+`JSON_CODE_SCHEMA_PREPROCESS = [False, True]`
+
+### Explanation
+
+- `entry_desc`: The first JSON attribute. It is used to display the description of the test on the typing test screen.
+- `entry_text`: The second JSON attribute. It contains the actual text or code used in the typing test.
+
+### Important Notes
+
+1. The first and second attributes in any schema must always be present, as TextGenerator relies on them for proper functionality.
+2. Additional attributes can be added to the schema, but their usage and handling must be explicitly defined in TextGenerator.
+3. The `_PREPROCESS` list corresponds to each attribute in the schema and defines whether preprocessing (like cleaning or formatting) (defined in `_preprocess_code` in `/core/JsonHandler.py`) should be applied to that attribute.
+
+
 ## Notes
 - Before usage, make sure to add some sort of dictionary in `/dicts/` and change the config in `main.py` (later will be handled with a dynamic config).
 - Oxford 3000 Dictionary is available at `https://github.com/sapbmw/The-Oxford-3000`
