@@ -28,6 +28,8 @@
 - Add stats (eror/key heatmaps)
 - Add json database for attempts/stats
 - Add command palette for the custom text
+- Add punctuation and capital letter mode
+- Add signs and capitals ONLY mode
 
 ## Project structure
 ```
