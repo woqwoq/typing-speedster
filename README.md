@@ -18,6 +18,7 @@
 - ~~Add scroallable container to attempt entry's tooltip~~❌Not doable
 - ~~Cleanup ResultsScreen~~✅
 - ~~Change `Code.txt` and `Lyrics.txt` to JSON~~✅
+- Turn Modes into a Separate Abstract Class. Some specific modes will implement it.
 
 ### **Features** 
 - Replace unmatched char to what it should be
