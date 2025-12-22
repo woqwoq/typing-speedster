@@ -2,7 +2,7 @@ import random
 from textual import log
 from core.Mode import Mode
 from core.JsonHandler import JsonHandler
-
+from core.modes.TextMode import TextMode
 
 JSON_CODE_SCHEMA = ['entry_desc', 'entry_text']
 JSON_CODE_SCHEMA_PREPROCESS = [False, True]
@@ -21,44 +21,18 @@ class TextGenerator():
 
         self.recent_description = None
 
-        self.words = self._get_unique_words_from_file()
-        self.word_count = len(self.words)
         self.unallowed_chars = unallowed_chars
+        self.text_mode = TextMode(seed, text_source_path, unallowed_chars)
         random.seed(seed)
 
 
-    def _get_unique_words_from_file(self):
-        unique_words = set()
-        file = open(self.text_source_path)
-
-        for line in file:
-            for word in line.split():
-                curr_word = word.lower()
-                unique_words.add(curr_word)
-        return list(unique_words)
-    
-
-    def _remove_unallowed_chars(self, text: str):
-        for unallowed_char in self.unallowed_chars:
-            text = text.replace(unallowed_char, '')
-        
-        return text
     
     def _get_error_text(self, path):
         return f"Error: {path} is empty or doesn't exist!"
 
     def generate_text(self, amount: int, allowedLen: list):
-        text = []
-        for i in range(amount):
-            current_index = random.randint(0, self.word_count-1)
-            while(not(len(self.words[current_index]) >= allowedLen[0] and len(self.words[current_index]) <= allowedLen[1])):
-                current_index = random.randint(0, self.word_count-1)
+        return self.text_mode.generate_text(amount, allowedLen)
 
-            text.append(self.words[current_index])
-
-        text = self._remove_unallowed_chars(' '.join(text))
-        return text
-    
     def generate_lyrics(self, song_number: int, allowedLen: list):
         handler = JsonHandler(self.lyrics_source_path, JSON_LYRICS_SCHEMA, JSON_LYRICS_SCHEMA_PREPROCESS)
         if not handler.is_valid():
