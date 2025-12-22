@@ -100,7 +100,7 @@ class JsonHandler:
 
 # SCHEMA = ['song_name', 'lyrics']
 # SCHEMA_PREPROCESS = [0, 1]
-
+#
 # message = """[Intro: Eminem]
 # (Yo, left, yo, left) 'Cause sometimes you just feel tired
 # (Yo, left, right, left) Feel weak, and when you feel weak
@@ -110,7 +110,7 @@ class JsonHandler:
 # (Yo, left, right, left) And get that motivation to not give up
 # (Yo, left, yo, left) And not be a quitter
 # (Yo, left, right, left) No matter how bad you wanna just fall flat on your face and collapse
-
+#
 # [Verse 1: Eminem]
 # 'Til I collapse, I'm spillin' these raps long as you feel 'em
 # 'Til the day that I drop, you'll never say that I'm not killin' 'em
@@ -146,7 +146,7 @@ class JsonHandler:
 # 'Til my legs give out, can't shut my mouth (The roof comes off, the roof comes off)
 # 'Til the smoke clears out, am I high? Perhaps ('Til my legs, until my legs)
 # I'ma rip this shit 'til my bones collapse (Give out from underneath me)
-
+#
 # [Verse 2: Eminem]
 # Music is like magic, there's a certain feelin' you get
 # When you real and you spit, and people are feelin' your shit
@@ -173,7 +173,7 @@ class JsonHandler:
 # 'Til my legs give out, can't shut my mouth (The roof comes off, the roof comes off)
 # 'Til the smoke clears out, am I high? Perhaps ('Til my legs, until my legs)
 # I'ma rip this shit 'til my bones collapse (Give out from underneath me)
-
+#
 # [Verse 3: Eminem]
 # Soon as a verse starts, I eat at an MC's heart
 # What is he thinking? How not to go against me, smart
@@ -200,7 +200,7 @@ class JsonHandler:
 # 'Til my legs give out, can't shut my mouth (The roof comes off, the roof comes off)
 # 'Til the smoke clears out, am I high? Perhaps ('Til my legs, until my legs)
 # I'ma rip this shit 'til my bones collapse (Give out from underneath me)
-
+#
 # [Outro: Eminem, Nate Dogg & Eminem & Nate Dogg]
 # Until the roof, until the roof
 # The roof comes off, the roof comes off
@@ -208,6 +208,6 @@ class JsonHandler:
 # Give out from underneath me, I
 # I will not fall, I will stand tall
 # Feels like no one can beat me"""
-# handler = JsonHandler('dicts/Lyrics.txt', SCHEMA, SCHEMA_PREPROCESS)
-
+# handler = JsonHandler('Lyrics.txt', SCHEMA, SCHEMA_PREPROCESS)
+#
 # handler.add_json_entry(['Eminem - \'Till I Collapse', message], True)

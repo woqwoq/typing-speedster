@@ -2,7 +2,9 @@ import random
 from textual import log
 from core.Mode import Mode
 from core.JsonHandler import JsonHandler
+
 from core.modes.TextMode import TextMode
+from core.modes.LyricsMode import LyricsMode
 
 JSON_CODE_SCHEMA = ['entry_desc', 'entry_text']
 JSON_CODE_SCHEMA_PREPROCESS = [False, True]
@@ -19,36 +21,30 @@ class TextGenerator():
         self.quote_source_path = quote_source_path
         self.code_source_path = code_source_path
 
-        self.recent_description = None
-
         self.unallowed_chars = unallowed_chars
-        self.text_mode = TextMode(seed, text_source_path, unallowed_chars)
+        
+        self.recent_description = None
+        
         random.seed(seed)
 
+        
+        self.text_mode = TextMode(seed, text_source_path, unallowed_chars)
+        self.lyrics_mode = LyricsMode(seed, lyrics_source_path, unallowed_chars)
 
-    
     def _get_error_text(self, path):
         return f"Error: {path} is empty or doesn't exist!"
 
     def generate_text(self, amount: int, allowedLen: list):
-        return self.text_mode.generate_text(amount, allowedLen)
+        text = self.text_mode.generate_text(amount, allowedLen)
+
+        return text
 
     def generate_lyrics(self, song_number: int, allowedLen: list):
-        handler = JsonHandler(self.lyrics_source_path, JSON_LYRICS_SCHEMA, JSON_LYRICS_SCHEMA_PREPROCESS)
-        if not handler.is_valid():
-            return self._get_error_text(self.lyrics_source_path)
-        
-        entry = handler.get_entry(song_number%handler.size())
-        lyrics_lines = entry[JSON_LYRICS_SCHEMA[1]]
+        text = self.lyrics_mode.generate_text(song_number, allowedLen)
+        self.recent_description = self.lyrics_mode.recent_description
 
-        line_count = random.randint(allowedLen[0], allowedLen[1])
+        return text
 
-        start = random.randint(0, len(lyrics_lines)-line_count-1)
-        end = start+line_count
-
-        self.recent_description = entry[JSON_LYRICS_SCHEMA[0]]
-        return ''.join(lyrics_lines[start:end])
-    
     def generate_code_fragment(self, number: int):
         handler = JsonHandler(self.code_source_path, JSON_CODE_SCHEMA, JSON_CODE_SCHEMA_PREPROCESS)
         if not handler.is_valid():
